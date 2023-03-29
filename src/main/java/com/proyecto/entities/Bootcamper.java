@@ -77,6 +77,9 @@ public class Bootcamper extends Usuario {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "bootcamper")
     private List<Correo> correos;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "bootcamper")
+    private List<Idioma> idiomas;
+
 
 
 }

@@ -25,14 +25,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-
 public class Bootcamp implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
-
     private int id;
     private String nombre;
     private String logo;
@@ -47,7 +45,6 @@ public class Bootcamp implements Serializable {
     /**
      * Creación de relaciones entre tablas
      */
-
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, mappedBy = "bootcamp" ) 
     private List <Bootcamper> bootcampers;
     
