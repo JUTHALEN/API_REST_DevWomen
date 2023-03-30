@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,7 +15,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,15 +37,24 @@ public class Bootcamp implements Serializable {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private int id;
+    
+    @NotEmpty(message = "El nombre no puede estar vacío")
+    @Size(min = 4, max = 25, message = "El nombre tiene que estar entre 4 y 25 caracteres")
     private String nombre;
-    private String logo;
 
-    @DateTimeFormat (pattern = "yyyy-MM-dd")
+    private String logo;
+    private Orientacion orientacion;
+    private String descripcion;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")      
     private LocalDate fechaInicio;  
 
-    @DateTimeFormat (pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")      
     private LocalDate fechaFin;  
 
+    public enum Orientacion {
+        BACK_END,FRONT_END,FULL_STACK
+    }
 
     /**
      * Creación de relaciones entre tablas
@@ -48,5 +62,9 @@ public class Bootcamp implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, mappedBy = "bootcamp" ) 
     private List <Bootcamper> bootcampers;
     
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, mappedBy = "bootcamp")
+    private Idioma idioma;
+
+
 }
 
