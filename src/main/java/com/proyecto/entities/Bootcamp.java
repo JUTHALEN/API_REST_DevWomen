@@ -13,6 +13,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,6 +35,8 @@ public class Bootcamp implements Serializable {
     private int id;
     private String nombre;
     private String logo;
+    private Orientacion orientacion;
+    private String descripcion;
 
     @DateTimeFormat (pattern = "yyyy-MM-dd")
     private LocalDate fechaInicio;  
@@ -41,6 +44,9 @@ public class Bootcamp implements Serializable {
     @DateTimeFormat (pattern = "yyyy-MM-dd")
     private LocalDate fechaFin;  
 
+    public enum Orientacion {
+        BACK_END,FRONT_END,FULL_STACK
+    }
 
     /**
      * Creación de relaciones entre tablas
@@ -48,5 +54,9 @@ public class Bootcamp implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, mappedBy = "bootcamp" ) 
     private List <Bootcamper> bootcampers;
     
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, mappedBy = "bootcamp")
+    private List <Idioma> idiomas;
+
+
 }
 
