@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,6 +36,7 @@ public class Idioma implements Serializable{
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     private Bootcamper bootcamper;
 
-    
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    private Bootcamp bootcamp;
     
 }
