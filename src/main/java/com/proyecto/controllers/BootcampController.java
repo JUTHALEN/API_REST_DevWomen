@@ -171,6 +171,8 @@ public class BootcampController {
 
         return responseEntity;
     }
+
+    // Metodo que borra los bootcammmps
     @Transactional
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminaProducto(@PathVariable(name = "id") Integer id){
