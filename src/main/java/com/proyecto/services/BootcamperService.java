@@ -9,6 +9,6 @@ public interface BootcamperService {
     public List<Bootcamper> findAll(); //Busca todo
     public Bootcamper findById(int idBootcamper); //Busca por Id
     public void deleteById(int idBootcamper); //Borra
-    public void save (Bootcamper bootcamper); //Guarda y actualiza
+    public Bootcamper save (Bootcamper bootcamper); //Guarda y actualiza
 
 }
