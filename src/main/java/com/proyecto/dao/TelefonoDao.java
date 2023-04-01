@@ -10,7 +10,7 @@ import com.proyecto.entities.Bootcamper;
 import com.proyecto.entities.Telefono;
 
 @Repository
-public interface TelefonoDao extends JpaRepository <Telefono, Integer> {
+public interface TelefonoDao extends JpaRepository <Telefono, Long> {
 
     long deleteByBootcamper (Bootcamper bootcamper);    
     List<Telefono> findByBootcamper (Bootcamper bootcamper);
