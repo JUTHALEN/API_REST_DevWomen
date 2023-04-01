@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.proyecto.dao.TelefonoDao;
 import com.proyecto.entities.Bootcamper;
 import com.proyecto.entities.Telefono;
+import org.springframework.transaction.annotation.Transactional;
 
 public class TelefonoServiceImpl implements TelefonoService{
 
@@ -24,21 +25,25 @@ public class TelefonoServiceImpl implements TelefonoService{
     }
 
     @Override
+    @Transactional
     public void deleteById(long idTelefono) {
        telefonoDao.deleteById(idTelefono);
     }
 
     @Override
+    @Transactional
     public Telefono save(Telefono telefono) {
         return telefonoDao.save(telefono);
     }
 
     @Override
+    @Transactional
     public void deleteByBootcamper(Bootcamper bootcamper) {
         telefonoDao.deleteByBootcamper(bootcamper);
     }
 
     @Override
+    @Transactional
     public List<Telefono> findByBootcamper(Bootcamper bootcamper) {
         return telefonoDao.findByBootcamper(bootcamper);
     }
