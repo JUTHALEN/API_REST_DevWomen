@@ -3,6 +3,9 @@ package com.proyecto.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,10 +19,15 @@ public class BootcamperServiceImpl implements BootcamperService {
     private BootcamperDao bootcamperDao;
 
     @Override
-    public List<Bootcamper> findAll() {
-        return bootcamperDao.findAll();
+    public List<Bootcamper> findAll(Sort sort) {
+        return bootcamperDao.findAll(sort);
     }
 
+    @Override
+    public Page<Bootcamper> findAll(Pageable pageable) {
+        return bootcamperDao.findAll(pageable);   
+     }
+     
     @Override
     public Bootcamper findById(long idBootcamper) {
         return findById(idBootcamper);
@@ -37,7 +45,13 @@ public class BootcamperServiceImpl implements BootcamperService {
         return bootcamperDao.save(bootcamper);
     }
 
+    @Override
+    public void delete(Bootcamper bootcamper) {
+        bootcamperDao.delete(bootcamper);
+    }
 
-   
+ 
+
+  
     
 }
