@@ -30,13 +30,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+
 public class Bootcamp implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
     
     @NotEmpty(message = "El nombre no puede estar vacío")
     @Size(min = 4, max = 25, message = "El nombre tiene que estar entre 4 y 25 caracteres")

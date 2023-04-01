@@ -1,11 +1,10 @@
 package com.proyecto.entities;
 
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -16,50 +15,53 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 
 @Entity
 @Table(name = "bootcampers")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Bootcamper extends Usuario {
+@Builder
+
+public class Bootcamper implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
+    private long id;
 
-    private int id;
+    @NotEmpty(message = "El nombre no puede estar vacío")
+    @Size(min = 3, max = 25, message = "El nombre tiene que estar entre 3 y 25 caracteres")
+    private String nombre; 
+
+    private String primerApellido;
+    private String segundoApellido;
+    private Genero genero;
+    private String DNI;
     private double salario;    
     private Formacion formacion;
     private String foto;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate fechaNacimiento;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaAlta;  
 
+    public enum Genero {
+        HOMBRE, MUJER, OTRO 
+    }
 
     public enum Formacion {
          GRADO_UNIVERSITARIO, GRADO_SUPERIOR, GRADO_MEDIO, BACHILLERATO, FORMACION_PROFESIONAL, OTRO;
-    }
-
-    //Constructor;
-    public Bootcamper(String nombre, String primerApellido, String segundoApellido, Genero genero, String DNI,
-            LocalDate fechaNacimiento, double salario, Formacion formacion, String foto, LocalDate fechaAlta) {
-        super(); // invoca el constructor sin argumentos de la clase padre
-        this.salario = salario;
-        this.formacion = formacion;
-        this.foto = foto;
-        this.fechaAlta = fechaAlta;
-        setNombre(nombre);
-        setPrimerApellido(primerApellido);
-        setSegundoApellido(segundoApellido);
-        setGenero(genero);
-        setDNI(DNI);
-        setFechaNacimiento(fechaNacimiento);
     }
 
 
