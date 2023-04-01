@@ -1,5 +1,6 @@
 package com.proyecto.controllers;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,9 +26,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.proyecto.entities.Bootcamp;
 import com.proyecto.services.BootcampService;
+import com.proyecto.utilities.FileUploadUtil;
 
 import jakarta.validation.Valid;
 
@@ -36,6 +39,10 @@ import jakarta.validation.Valid;
 public class BootcampController {
     @Autowired
     private BootcampService bootcampService;
+
+    //Inyeccion para fotos
+    @Autowired
+    private FileUploadUtil fileUploadUtil; 
 
     // Metodo que encuentra los bootcamps
     @GetMapping
@@ -73,14 +80,15 @@ public class BootcampController {
     }
     // Metodo que inserta un nuevo Bootcamp
 
-    @PostMapping
+    @PostMapping ( consumes = "multipart/form-data" )
     @Transactional
     public ResponseEntity<Map<String, Object>> insert(@Valid @RequestBody Bootcamp bootcamp,
-            BindingResult result) {
+            BindingResult result, @RequestParam(name = "file") MultipartFile file) throws IOException {
 
         Map<String, Object> responseAsMap = new HashMap<>();
 
         ResponseEntity<Map<String, Object>> responseEntity = null;
+
         /** Primero comprobar si hay errores en el Bootcamp recibido */
         if (result.hasErrors()) {
             List<String> errorMessages = new ArrayList<>();
@@ -94,6 +102,13 @@ public class BootcampController {
             responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.BAD_REQUEST);
 
             return responseEntity; // si hay error no quiero que se guarde el Bootcamp
+        }
+        
+        /*Previamente a guardar un Bootcamp comprobamos si nos han enviado una imagen */
+        if(!file.isEmpty()) {
+            String fileCode = fileUploadUtil.saveFile(file.getOriginalFilename(), file); //recibe nombre del archivo y su contenido
+            //Hemos lanzado una excepcion para arriba
+            bootcamp.setLogo(fileCode + "-" + file.getOriginalFilename());
         }
 
         Bootcamp bootcampDB = bootcampService.save(bootcamp);
