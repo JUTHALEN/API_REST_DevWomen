@@ -6,9 +6,9 @@ import java.util.List;
 import com.proyecto.entities.Bootcamper;
 
 public interface BootcamperService {
-    public List<Bootcamper> findAll(); //Busca todo
-    public Bootcamper findById(int idBootcamper); //Busca por Id
-    public void deleteById(int idBootcamper); //Borra
-    public Bootcamper save (Bootcamper bootcamper); //Guarda y actualiza
+    public List<Bootcamper> findAll(); 
+    public Bootcamper findById(long idBootcamper); 
+    public void deleteById(long idBootcamper); 
+    public Bootcamper save (Bootcamper bootcamper); 
 
 }
