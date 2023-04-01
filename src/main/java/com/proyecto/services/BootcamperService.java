@@ -9,6 +9,6 @@ public interface BootcamperService {
     public List<Bootcamper> findAll(); 
     public Bootcamper findById(long idBootcamper); 
     public void deleteById(long idBootcamper); 
-    public Bootcamper save (Bootcamper bootcamper); 
+    public Bootcamper save(Bootcamper bootcamper); 
 
 }
