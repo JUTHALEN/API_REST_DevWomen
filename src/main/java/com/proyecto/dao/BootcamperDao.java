@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.proyecto.entities.Bootcamper;
 
 @Repository
-public interface BootcamperDao extends JpaRepository <Bootcamper,Integer> {
+public interface BootcamperDao extends JpaRepository <Bootcamper,Long> {
     
 }

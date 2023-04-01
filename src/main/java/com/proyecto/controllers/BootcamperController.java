@@ -26,25 +26,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.proyecto.entities.Bootcamp;
-import com.proyecto.services.BootcampService;
+import com.proyecto.entities.Bootcamper;
+import com.proyecto.services.BootcamperService;
 
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/bootcamps")
-public class BootcampController {
-    @Autowired
-    private BootcampService bootcampService;
+@RequestMapping("/bootcampers")
+public class BootcamperController {
 
-    // Metodo que encuentra los bootcamps
+    @Autowired
+    private BootcamperService bootcamperService;
+
+    /**
+     * Metodo que encuentra los bootcampers
+     */
+
     @GetMapping
-    public ResponseEntity<List<Bootcamp>> findAll(@RequestParam(name = "page", required = false) Integer page,
+    public ResponseEntity<List<Bootcamper>> findAll(@RequestParam(name = "page", required = false) Integer page,
             @RequestParam(name = "size", required = false) Integer size) {
 
-        ResponseEntity<List<Bootcamp>> responseEntity = null;
+        ResponseEntity<List<Bootcamper>> responseEntity = null;
 
-        List<Bootcamp> bootcamps = new ArrayList<>();
+        List<Bootcamper> bootcampers = new ArrayList<>();
 
         Sort sortByNombre = Sort.by("nombre");
 
@@ -52,18 +56,18 @@ public class BootcampController {
 
             try {
                 Pageable pageable = PageRequest.of(page, size, sortByNombre);
-                Page<Bootcamp> bootcampsPaginados = bootcampService.findAll(pageable);
-                bootcamps = bootcampsPaginados.getContent(); // Aqui estan los Bootcamps
+                Page<Bootcamper> bootcampersPaginados = bootcamperService.findAll(pageable);
+                bootcampers = bootcampersPaginados.getContent();
 
-                responseEntity = new ResponseEntity<List<Bootcamp>>(bootcamps, HttpStatus.OK);
+                responseEntity = new ResponseEntity<List<Bootcamper>>(bootcampers, HttpStatus.OK);
             } catch (Exception e) {
                 responseEntity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         } else {
             // sin paginacion, pero con ordenamiento
             try {
-                bootcamps = bootcampService.findAll(sortByNombre);
-                responseEntity = new ResponseEntity<List<Bootcamp>>(bootcamps, HttpStatus.OK);
+                bootcampers = bootcamperService.findAll(sortByNombre);
+                responseEntity = new ResponseEntity<>(bootcampers, HttpStatus.OK);
             } catch (Exception e) {
                 responseEntity = new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
@@ -71,17 +75,20 @@ public class BootcampController {
 
         return responseEntity;
     }
+
     // Metodo que inserta un nuevo Bootcamp
 
     @PostMapping
     @Transactional
-    public ResponseEntity<Map<String, Object>> insert(@Valid @RequestBody Bootcamp bootcamp,
+    public ResponseEntity<Map<String, Object>> insert(@Valid @RequestBody Bootcamper bootcamper,
             BindingResult result) {
 
         Map<String, Object> responseAsMap = new HashMap<>();
 
         ResponseEntity<Map<String, Object>> responseEntity = null;
-        /** Primero comprobar si hay errores en el Bootcamp recibido */
+
+        /** Primero comprobar si hay errores en el Bootcamper recibido */
+
         if (result.hasErrors()) {
             List<String> errorMessages = new ArrayList<>();
             for (ObjectError error : result.getAllErrors()) {
@@ -93,19 +100,22 @@ public class BootcampController {
 
             responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.BAD_REQUEST);
 
-            return responseEntity; // si hay error no quiero que se guarde el Bootcamp
+            return responseEntity; // si hay error no quiero que se guarde el Bootcamper
         }
 
-        Bootcamp bootcampDB = bootcampService.save(bootcamp);
+        Bootcamper bootcamperDB = bootcamperService.save(bootcamper);
+        /**
+         * Crear la validación para saber si se ha guardado
+         */
         try {
-            if (bootcampDB != null) { // Aqui estoy haciendo la validacion de si se ha guardado
-                String mensaje = "El Bootcamp se ha creado correctamente";
+            if (bootcamperDB != null) {
+                String mensaje = "Bootcamper se ha creado correctamente";
                 responseAsMap.put("mensaje", mensaje);
-                responseAsMap.put("Bootcamp", bootcampDB);
+                responseAsMap.put("Bootcamper", bootcamperDB);
                 responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.CREATED);
 
             } else {
-                String mensaje = "El Bootcamp no se ha creado";
+                String mensaje = "Bootcamper no se ha podido crear";
                 responseAsMap.put("mensaje", mensaje);
                 responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.NOT_ACCEPTABLE);
             }
@@ -119,18 +129,26 @@ public class BootcampController {
 
         return responseEntity;
     }
-    // Metodo que actualiza el bootcamp
+
+    /**
+     * Metodo que actualiza los bootcampers
+     */
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<Map<String, Object>> update(@Valid @RequestBody Bootcamp bootcamp, BindingResult result,
+    public ResponseEntity<Map<String, Object>> update(@Valid @RequestBody Bootcamper bootcamper, BindingResult result,
             @PathVariable(name = "id") Integer id) {
-        // Para que valide lo que llega
+
+        /**
+         * Generar la validación de lo que se recibe
+         */
 
         Map<String, Object> responseAsMap = new HashMap<>();
 
         ResponseEntity<Map<String, Object>> responseEntity = null;
-        /** Primero comprobar si hay errores en el bootcamp recibido */
+
+        /** Primero comprobar si hay errores en el bootcamper recibido */
+
         if (result.hasErrors()) {
             List<String> errorMessages = new ArrayList<>();
             for (ObjectError error : result.getAllErrors()) {
@@ -142,27 +160,38 @@ public class BootcampController {
 
             responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.BAD_REQUEST);
 
-            return responseEntity; // si hay error no quiero que se guarde el bootcamp
+            return responseEntity;
         }
+        /**
+         * Si hay errores no se guardará el bootcamper
+         */
 
-        // Vinculamos el id que se recibe con el bootcamp
-        bootcamp.setId(id);
-        // Si no hay errores, entonces actualizamos el bootcamp.
-        Bootcamp bootcampDB = bootcampService.save(bootcamp);
+        /**
+         * Vinculamos el id que se recibe con el bootcamper
+         */
+
+        bootcamper.setId(id);
+
+        /**
+         * Si no hay errores, entonces actualizamos el bootcamp.
+         */
+
+        Bootcamper bootcamperDB = bootcamperService.save(bootcamper);
+
         try {
-            if (bootcampDB != null) { // Aqui estoy haciendo la validacion de si se ha guardado
-                String mensaje = "El bootcamp se ha actualizado correctamente";
+            if (bootcamperDB != null) { // Aqui estoy haciendo la validacion de si se ha guardado
+                String mensaje = "Bootcamper actualizado correctamente";
                 responseAsMap.put("mensaje", mensaje);
-                responseAsMap.put("bootcamp", bootcampDB);
+                responseAsMap.put("bootcamp", bootcamperDB);
                 responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.OK);
 
             } else {
-                String mensaje = "El bootcamp no se ha actualizado";
+                String mensaje = "Bootcamper no actualizado";
                 responseAsMap.put("mensaje", mensaje);
                 responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.NOT_ACCEPTABLE);
             }
         } catch (DataAccessException e) {
-            
+
             String errorGrave = "Ha tenido lugar un error grave y la causa más probable puede ser" +
                     e.getMostSpecificCause();
             responseAsMap.put("errorGrave", errorGrave);
@@ -172,21 +201,26 @@ public class BootcampController {
         return responseEntity;
     }
 
-    // Metodo que borra los bootcammmps
+
+    /**
+     * Método que borra los bootcampers
+     *  */ 
+
     @Transactional
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteBootcamp(@PathVariable(name = "id") Integer id){
+    public ResponseEntity<String> deleteBootcamper(@PathVariable(name = "id") Integer id) {
+
         ResponseEntity<String> responseEntity = null;
        
-        Bootcamp bootcamp = bootcampService.findById(id);
+        Bootcamper bootcamper = bootcamperService.findById(id);
       
         try {
-            if (bootcamp != null) {
-            String mensaje = "El bootcamp se ha borrado correctamente";
-            bootcampService.delete(bootcamp);
+            if (bootcamper != null) {
+            String mensaje = "Bootcamper borrado correctamente";
+            bootcamperService.delete(bootcamper);
             responseEntity = new ResponseEntity<String>(mensaje, HttpStatus.OK);
         } else{
-            responseEntity = new ResponseEntity<String>("No existe el bootcamp",HttpStatus.NO_CONTENT);
+            responseEntity = new ResponseEntity<String>("No existe el bootcamper",HttpStatus.NO_CONTENT);
         }
     } catch (DataAccessException e) {
            e.getMostSpecificCause();
@@ -196,4 +230,5 @@ public class BootcampController {
         }
         return responseEntity;
     }
+
 }
