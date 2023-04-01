@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.proyecto.dao.IdiomaDao;
 import com.proyecto.entities.Bootcamper;
 import com.proyecto.entities.Idioma;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class IdiomaServiceImpl implements IdiomaService{
@@ -26,21 +27,25 @@ public class IdiomaServiceImpl implements IdiomaService{
     }
 
     @Override
+    @Transactional
     public void deleteById(long idIdioma) {
         idiomaDao.deleteById(idIdioma);
     }
 
     @Override
+    @Transactional
     public Idioma save(Idioma Idioma) {
         return idiomaDao.save(Idioma);
     }
 
     @Override
+    @Transactional
     public void deleteByBootcamper(Bootcamper bootcamper) {
         idiomaDao.deleteByBootcamper(bootcamper);
     }
 
     @Override
+    @Transactional 
     public List<Idioma> findByBootcamper(Bootcamper bootcamper) {
         return idiomaDao.findByBootcamper(bootcamper);
     }
