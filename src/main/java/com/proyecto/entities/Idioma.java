@@ -31,11 +31,15 @@ public class Idioma implements Serializable{
     private long id;
 
     private Lenguage nombre;
-    private String nivel;
+    private Nivel nivel;
     private boolean certificado;
 
-    private enum Lenguage{
+    public enum Lenguage{
         INGLES, FRANCES, ALEMAN, ITALIANO, CHINO, JAPONES, ARABE, RUSO, PORTUGUES, ESPANOL;
+    }
+
+    public enum Nivel {
+        A1, A2, B1, B2, C1,C2
     }
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
