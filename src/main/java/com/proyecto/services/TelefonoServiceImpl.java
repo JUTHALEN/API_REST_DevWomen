@@ -3,13 +3,15 @@ package com.proyecto.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.proyecto.dao.TelefonoDao;
 import com.proyecto.entities.Bootcamper;
 import com.proyecto.entities.Telefono;
 import org.springframework.transaction.annotation.Transactional;
 
-public class TelefonoServiceImpl implements TelefonoService{
+@Service
+public class TelefonoServiceImpl implements TelefonoService {
 
     @Autowired
     private TelefonoDao telefonoDao;

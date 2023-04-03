@@ -1,9 +1,11 @@
 package com.proyecto.controllers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -27,7 +29,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.proyecto.entities.Bootcamper;
+import com.proyecto.entities.Correo;
+import com.proyecto.entities.Telefono;
 import com.proyecto.services.BootcamperService;
+import com.proyecto.services.CorreoService;
+import com.proyecto.services.TelefonoService;
 
 import jakarta.validation.Valid;
 
@@ -45,8 +51,9 @@ public class BootcamperController {
     @GetMapping
     public ResponseEntity<List<Bootcamper>> findAll(@RequestParam(name = "page", required = false) Integer page,
             @RequestParam(name = "size", required = false) Integer size) {
-
-        ResponseEntity<List<Bootcamper>> responseEntity = null;
+            
+       
+            ResponseEntity<List<Bootcamper>> responseEntity = null;
 
         List<Bootcamper> bootcampers = new ArrayList<>();
 
@@ -58,7 +65,7 @@ public class BootcamperController {
                 Pageable pageable = PageRequest.of(page, size, sortByNombre);
                 Page<Bootcamper> bootcampersPaginados = bootcamperService.findAll(pageable);
                 bootcampers = bootcampersPaginados.getContent();
-
+               
                 responseEntity = new ResponseEntity<List<Bootcamper>>(bootcampers, HttpStatus.OK);
             } catch (Exception e) {
                 responseEntity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);

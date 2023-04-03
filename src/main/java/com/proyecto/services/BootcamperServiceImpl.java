@@ -24,14 +24,11 @@ public class BootcamperServiceImpl implements BootcamperService {
     }
 
     @Override
-<<<<<<< HEAD
     public Page<Bootcamper> findAll(Pageable pageable) {
         return bootcamperDao.findAll(pageable);   
      }
      
     @Override
-=======
->>>>>>> main2
     public Bootcamper findById(long idBootcamper) {
         return findById(idBootcamper);
     }
