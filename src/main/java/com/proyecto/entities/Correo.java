@@ -2,6 +2,8 @@ package com.proyecto.entities;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -37,6 +39,7 @@ public class Correo implements Serializable{
      * Creación de relaciones entre tablas
      */
 
-    @ManyToOne (fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    @ManyToOne (fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JsonIgnore
     private Bootcamper bootcamper;
 }

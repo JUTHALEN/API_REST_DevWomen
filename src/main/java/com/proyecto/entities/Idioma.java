@@ -2,6 +2,8 @@ package com.proyecto.entities;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -30,22 +32,20 @@ public class Idioma implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private Lenguage nombre;
+    private Lenguage language;
     private Nivel nivel;
     private boolean certificado;
 
     public enum Lenguage{
-        INGLES, FRANCES, ALEMAN, ITALIANO, CHINO, JAPONES, ARABE, RUSO, PORTUGUES, ESPANOL;
+        INGLES, FRANCES, ALEMAN, ITALIANO, CHINO, JAPONES, ARABE, RUSO, PORTUGUES, ESPANOL
     }
 
     public enum Nivel {
         A1, A2, B1, B2, C1,C2
     }
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JsonIgnore
     private Bootcamper bootcamper;
-
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    private Bootcamp bootcamp;
     
 }

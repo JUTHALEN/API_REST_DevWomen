@@ -73,13 +73,13 @@ public class Bootcamper implements Serializable {
     private Bootcamp bootcamp;
 
     //Relacionar con telefono y correo
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "bootcamper")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, mappedBy = "bootcamper")
     private List<Telefono> telefonos;
    
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "bootcamper")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, mappedBy = "bootcamper")
     private List<Correo> correos;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "bootcamper")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, mappedBy = "bootcamper")
     private List<Idioma> idiomas;
 
 

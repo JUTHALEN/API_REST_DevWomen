@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -53,6 +54,8 @@ public class Bootcamp implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd")      
     private LocalDate fechaFin;  
 
+    private Lenguage language;
+
     public enum Orientacion {
         BACK_END,FRONT_END,FULL_STACK
     }
@@ -61,10 +64,12 @@ public class Bootcamp implements Serializable {
      * Creación de relaciones entre tablas
      */
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, mappedBy = "bootcamp" ) 
+    @JsonIgnore
     private List <Bootcamper> bootcampers;
     
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, mappedBy = "bootcamp")
-    private Idioma idioma;
+    public enum Lenguage{
+        INGLES, FRANCES, ALEMAN, ITALIANO, CHINO, JAPONES, ARABE, RUSO, PORTUGUES, ESPANOL, OTRO
+    }
 
 
 }
