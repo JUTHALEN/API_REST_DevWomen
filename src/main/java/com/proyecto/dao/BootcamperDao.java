@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.proyecto.entities.Bootcamper;
 
 @Repository
-public interface BootcamperDao extends JpaRepository <Bootcamper,Long> {
+public interface BootcamperDao extends JpaRepository <Bootcamper, Long> {
     @Query(value = "select b from Bootcamper b left join fetch b.telefonos left join b.correos left join b.idiomas")
     public List<Bootcamper> findAll(Sort sort);
     

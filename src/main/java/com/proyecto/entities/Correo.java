@@ -3,6 +3,7 @@ package com.proyecto.entities;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -24,7 +25,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Correo implements Serializable{
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class Correo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -39,7 +41,7 @@ public class Correo implements Serializable{
      * Creación de relaciones entre tablas
      */
 
-    @ManyToOne (fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JsonIgnore
     private Bootcamper bootcamper;
 }
