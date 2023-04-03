@@ -4,9 +4,10 @@ package com.proyecto.entities;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,6 +17,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,16 +46,22 @@ public class Bootcamper implements Serializable {
 
     private String primerApellido;
     private String segundoApellido;
+
+    @Enumerated(EnumType.STRING)
     private Genero genero;
+
     private String DNI;
-    private double salario;    
+    private double salario;
+
+    @Enumerated(EnumType.STRING)    
     private Formacion formacion;
+
     private String foto;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @PastOrPresent
     private LocalDate fechaNacimiento;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @PastOrPresent
     private LocalDate fechaAlta;  
 
     public enum Genero {

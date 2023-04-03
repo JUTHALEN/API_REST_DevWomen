@@ -76,8 +76,51 @@ public class BootcamperController {
         return responseEntity;
     }
 
-    // Metodo que inserta un nuevo Bootcamp
+    /**
+     * Recupera un bootcamper por el id.
+     * Va a responder a una peticion del tipo, por ejemplo:
+     * http://localhost:8080/bootcamper/2
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> findById(@PathVariable(name = "id") Integer id) {
 
+        ResponseEntity<Map<String, Object>> responseEntity = null;
+        Map<String, Object> responseAsMap = new HashMap<>(); 
+
+        Map<String, Object> responseAsError = new HashMap<>();
+
+        try {
+            Bootcamper bootcamper = bootcamperService.findById(id);
+
+            if (bootcamper != null) {
+                String successMessage = "Se ha encontrado el bootcamper con id: " + id;
+                responseAsMap.put("mensaje", successMessage);
+                responseAsMap.put("bootcamper", bootcamper);
+                responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.OK);
+
+            } else {
+                String errorMessage = "No se ha encontrado el bootcamper con id:";
+                responseAsMap.put("error", errorMessage);
+                responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.NOT_FOUND);
+            }
+
+        } catch (Exception e) {
+            String errorGrave = "Error grave";
+            responseAsMap.put("error", errorGrave);
+            responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return responseEntity;
+
+    }
+
+
+/**
+ * 
+ * Método que inserta nuevo Bootcamper
+ * 
+ * 
+ */
     @PostMapping
     @Transactional
     public ResponseEntity<Map<String, Object>> insert(@Valid @RequestBody Bootcamper bootcamper,

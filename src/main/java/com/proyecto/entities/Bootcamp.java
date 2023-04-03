@@ -3,13 +3,10 @@ package com.proyecto.entities;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,6 +15,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,13 +42,16 @@ public class Bootcamp implements Serializable {
     private String nombre;
 
     private String logo;
+
+    @Enumerated(EnumType.STRING)
     private Orientacion orientacion;
+
     private String descripcion;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")      
+    @PastOrPresent
     private LocalDate fechaInicio;  
 
-    @JsonFormat(pattern = "yyyy-MM-dd")      
+    @PastOrPresent    
     private LocalDate fechaFin;  
 
     public enum Orientacion {
