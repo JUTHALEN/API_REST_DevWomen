@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,7 +32,9 @@ public class Idioma implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private Lenguage nombre;
+    @Enumerated(EnumType.STRING)
+    private Lenguage lenguage;
+
     private String nivel;
     private boolean certificado;
 
