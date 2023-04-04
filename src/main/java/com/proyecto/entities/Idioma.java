@@ -35,7 +35,7 @@ public class Idioma implements Serializable{
     private boolean certificado;
 
     public enum Lenguage{
-        INGLES, FRANCES, ALEMAN, ITALIANO, CHINO, JAPONES, ARABE, RUSO, PORTUGUES, ESPANOL;
+        INGLES, FRANCES, ALEMAN, ITALIANO, CHINO, JAPONES, ARABE, RUSO, PORTUGUES, ESPANOL
     }
 
     public enum Nivel {
