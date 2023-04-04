@@ -34,7 +34,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Bootcamp implements Serializable {
 
@@ -60,7 +59,7 @@ public class Bootcamp implements Serializable {
     private LocalDate fechaFin;  
 
     @Enumerated(EnumType.STRING)
-    private Lenguage language;
+    private Language language;
 
     public enum Orientacion {
         BACK_END,FRONT_END,FULL_STACK
@@ -71,9 +70,9 @@ public class Bootcamp implements Serializable {
      */
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, mappedBy = "bootcamp" ) 
     @JsonIgnore
-    private List <Bootcamper> bootcampers;
+    private List<Bootcamper> bootcampers;
     
-    public enum Lenguage{
+    public enum Language{
         INGLES, FRANCES, ALEMAN, ITALIANO, CHINO, JAPONES, ARABE, RUSO, PORTUGUES, ESPANOL, OTRO
     }
 

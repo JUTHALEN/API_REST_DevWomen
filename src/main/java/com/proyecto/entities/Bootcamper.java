@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
@@ -45,27 +46,19 @@ public class Bootcamper implements Serializable {
     @NotEmpty(message = "El nombre no puede estar vacío")
     @Size(min = 3, max = 25, message = "El nombre tiene que estar entre 3 y 25 caracteres")
     private String nombre; 
-
-    private String primerApellido;
-    
+    private String primerApellido;    
     private String segundoApellido;
 
     @Enumerated(EnumType.STRING)
     private Genero genero;
-
     private String DNI;
-
     private double salario; 
 
     @Enumerated(EnumType.STRING)   
     private Formacion formacion;
 
     private String foto;
-
-    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaNacimiento;
-
-    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaAlta;  
 
     public enum Genero {
@@ -80,8 +73,9 @@ public class Bootcamper implements Serializable {
     /**
      * Creación de relaciones entre tablas
      */
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "idBootcamp")
+    @JsonIgnore
     private Bootcamp bootcamp;
 
     //Relacionar con telefono y correo

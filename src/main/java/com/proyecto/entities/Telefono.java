@@ -26,7 +26,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Telefono implements Serializable {
 

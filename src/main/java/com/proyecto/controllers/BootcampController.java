@@ -27,7 +27,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.proyecto.entities.Bootcamp;
+import com.proyecto.entities.Bootcamper;
 import com.proyecto.services.BootcampService;
+import com.proyecto.services.BootcamperService;
 
 import jakarta.validation.Valid;
 
@@ -36,6 +38,9 @@ import jakarta.validation.Valid;
 public class BootcampController {
     @Autowired
     private BootcampService bootcampService;
+
+    @Autowired
+    private BootcamperService bootcamperService;
 
     // Metodo que encuentra los bootcamps
     @GetMapping
@@ -98,7 +103,7 @@ public class BootcampController {
 
         Bootcamp bootcampDB = bootcampService.save(bootcamp);
         try {
-            if (bootcampDB != null) { // Aqui estoy haciendo la validacion de si se ha guardado
+            if (bootcampDB != null) { // Aqui estoy haciendo la validacion de si se ha guardado                
                 String mensaje = "El Bootcamp se ha creado correctamente";
                 responseAsMap.put("mensaje", mensaje);
                 responseAsMap.put("Bootcamp", bootcampDB);

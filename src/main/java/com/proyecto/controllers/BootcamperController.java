@@ -24,9 +24,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.proyecto.entities.Bootcamp;
 import com.proyecto.entities.Bootcamper;
+import com.proyecto.services.BootcampService;
 import com.proyecto.services.BootcamperService;
 
 import jakarta.validation.Valid;
@@ -37,6 +40,9 @@ public class BootcamperController {
 
     @Autowired
     private BootcamperService bootcamperService;
+
+    @Autowired
+    private BootcampService bootcampService;
 
     /**
      * Metodo que encuentra los bootcampers
@@ -80,11 +86,11 @@ public class BootcamperController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<Map<String, Object>> insert(@Valid @RequestBody Bootcamper bootcamper,
-            BindingResult result) {
+    public ResponseEntity<Map<String, Object>> insert(@Valid @RequestPart(name = "bootcamper") 
+                                                      Bootcamper bootcamper,
+                                                      BindingResult result) {
 
         Map<String, Object> responseAsMap = new HashMap<>();
-
         ResponseEntity<Map<String, Object>> responseEntity = null;
 
         /** Primero comprobar si hay errores en el Bootcamper recibido */
@@ -92,14 +98,12 @@ public class BootcamperController {
         if (result.hasErrors()) {
             List<String> errorMessages = new ArrayList<>();
             for (ObjectError error : result.getAllErrors()) {
-
                 errorMessages.add(error.getDefaultMessage());
 
             }
             responseAsMap.put("errores", errorMessages);
 
             responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.BAD_REQUEST);
-
             return responseEntity; // si hay error no quiero que se guarde el Bootcamper
         }
 
@@ -109,6 +113,12 @@ public class BootcamperController {
          */
         try {
             if (bootcamperDB != null) {
+                Bootcamp bootcamp = bootcamper.getBootcamp();
+                if (bootcamp != null) {
+                    bootcamperDB.setBootcamp(bootcamp);
+                    bootcamperService.save(bootcamperDB); // Asegúrate de tener un servicio bootcamper y un método save() en ese servicio
+                }      
+
                 String mensaje = "Bootcamper se ha creado correctamente";
                 responseAsMap.put("mensaje", mensaje);
                 responseAsMap.put("Bootcamper", bootcamperDB);
@@ -141,11 +151,9 @@ public class BootcamperController {
      */
 
     @GetMapping("/{id}")
-
     public ResponseEntity<Map<String, Object>> findById(@PathVariable(name = "id") Integer id) {
 
         ResponseEntity<Map<String, Object>> responseEntity = null;
-
         Map<String, Object> responseAsMap = new HashMap<>();
 
         try {
@@ -155,19 +163,14 @@ public class BootcamperController {
             if (bootcamper != null) {
 
                 String successMessage = "Se ha encontrado el bootcamper con id: " + id;
-
                 responseAsMap.put("mensaje", successMessage);
-
                 responseAsMap.put("bootcamper", bootcamper);
-
                 responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.OK);
 
             } else {
 
                 String errorMessage = "No se ha encontrado el bootcamper con id:";
-
                 responseAsMap.put("error", errorMessage);
-
                 responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.NOT_FOUND);
 
             }
