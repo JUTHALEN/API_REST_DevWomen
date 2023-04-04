@@ -2,8 +2,13 @@ package com.proyecto.entities;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,7 +27,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Idioma implements Serializable{
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class Idioma implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -30,18 +36,24 @@ public class Idioma implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private Lenguage nombre;
-    private String nivel;
+    @Enumerated(EnumType.STRING)
+    private Language language;
+
+    @Enumerated(EnumType.STRING)
+    private Nivel nivel;
+    
     private boolean certificado;
 
-    private enum Lenguage{
-        INGLES, FRANCES, ALEMAN, ITALIANO, CHINO, JAPONES, ARABE, RUSO, PORTUGUES, ESPANOL;
+    public enum Language{
+        INGLES, FRANCES, ALEMAN, ITALIANO, CHINO, JAPONES, ARABE, RUSO, PORTUGUES, ESPANOL
     }
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    private Bootcamper bootcamper;
+    public enum Nivel {
+        A1, A2, B1, B2, C1,C2
+    }
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    private Bootcamp bootcamp;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JsonIgnore
+    private Bootcamper bootcamper;
     
 }
