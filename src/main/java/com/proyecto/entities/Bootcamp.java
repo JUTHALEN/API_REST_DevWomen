@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -34,6 +35,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Bootcamp implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -148,8 +148,6 @@ public class BootcamperController {
 
         Map<String, Object> responseAsMap = new HashMap<>();
 
-        Map<String, Object> responseAsError = new HashMap<>();
-
         try {
 
             Bootcamper bootcamper = bootcamperService.findById(id);
