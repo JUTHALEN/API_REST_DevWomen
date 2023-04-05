@@ -131,6 +131,64 @@ public class BootcamperController {
     }
 
     /**
+     * 
+     * Recupera un bootcamper por el id.
+     * 
+     * Va a responder a una peticion del tipo, por ejemplo:
+     * 
+     * http://localhost:8080/bootcamper/2
+     * 
+     */
+
+    @GetMapping("/{id}")
+
+    public ResponseEntity<Map<String, Object>> findById(@PathVariable(name = "id") Integer id) {
+
+        ResponseEntity<Map<String, Object>> responseEntity = null;
+
+        Map<String, Object> responseAsMap = new HashMap<>();
+
+        Map<String, Object> responseAsError = new HashMap<>();
+
+        try {
+
+            Bootcamper bootcamper = bootcamperService.findById(id);
+
+            if (bootcamper != null) {
+
+                String successMessage = "Se ha encontrado el bootcamper con id: " + id;
+
+                responseAsMap.put("mensaje", successMessage);
+
+                responseAsMap.put("bootcamper", bootcamper);
+
+                responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.OK);
+
+            } else {
+
+                String errorMessage = "No se ha encontrado el bootcamper con id:";
+
+                responseAsMap.put("error", errorMessage);
+
+                responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.NOT_FOUND);
+
+            }
+
+        } catch (Exception e) {
+
+            String errorGrave = "Error grave";
+
+            responseAsMap.put("error", errorGrave);
+
+            responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+
+        return responseEntity;
+
+    }
+
+    /**
      * Metodo que actualiza los bootcampers
      */
 
@@ -201,32 +259,31 @@ public class BootcamperController {
         return responseEntity;
     }
 
-
     /**
      * Método que borra los bootcampers
-     *  */ 
+     */
 
     @Transactional
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteBootcamper(@PathVariable(name = "id") Integer id) {
 
         ResponseEntity<String> responseEntity = null;
-       
+
         Bootcamper bootcamper = bootcamperService.findById(id);
-      
+
         try {
             if (bootcamper != null) {
-            String mensaje = "Bootcamper borrado correctamente";
-            bootcamperService.delete(bootcamper);
-            responseEntity = new ResponseEntity<String>(mensaje, HttpStatus.OK);
-        } else{
-            responseEntity = new ResponseEntity<String>("No existe el bootcamper",HttpStatus.NO_CONTENT);
-        }
-    } catch (DataAccessException e) {
-           e.getMostSpecificCause();
+                String mensaje = "Bootcamper borrado correctamente";
+                bootcamperService.delete(bootcamper);
+                responseEntity = new ResponseEntity<String>(mensaje, HttpStatus.OK);
+            } else {
+                responseEntity = new ResponseEntity<String>("No existe el bootcamper", HttpStatus.NO_CONTENT);
+            }
+        } catch (DataAccessException e) {
+            e.getMostSpecificCause();
             String errorGrave = "Error grave";
             responseEntity = new ResponseEntity<String>(errorGrave, HttpStatus.INTERNAL_SERVER_ERROR);
-            
+
         }
         return responseEntity;
     }

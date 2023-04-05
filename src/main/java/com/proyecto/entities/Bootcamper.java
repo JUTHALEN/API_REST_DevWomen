@@ -5,8 +5,12 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,7 +33,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Bootcamper implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -43,11 +47,19 @@ public class Bootcamper implements Serializable {
     private String nombre; 
 
     private String primerApellido;
+    
     private String segundoApellido;
+
+    @Enumerated(EnumType.STRING)
     private Genero genero;
+
     private String DNI;
-    private double salario;    
+
+    private double salario; 
+
+    @Enumerated(EnumType.STRING)   
     private Formacion formacion;
+
     private String foto;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -61,25 +73,25 @@ public class Bootcamper implements Serializable {
     }
 
     public enum Formacion {
-         GRADO_UNIVERSITARIO, GRADO_SUPERIOR, GRADO_MEDIO, BACHILLERATO, FORMACION_PROFESIONAL, OTRO;
+         GRADO_UNIVERSITARIO, GRADO_SUPERIOR, GRADO_MEDIO, BACHILLERATO, FORMACION_PROFESIONAL, OTRO
     }
 
 
     /**
      * Creación de relaciones entre tablas
      */
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "idBootcamp")
     private Bootcamp bootcamp;
 
     //Relacionar con telefono y correo
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "bootcamper")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, mappedBy = "bootcamper")
     private List<Telefono> telefonos;
    
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "bootcamper")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, mappedBy = "bootcamper")
     private List<Correo> correos;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "bootcamper")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, mappedBy = "bootcamper")
     private List<Idioma> idiomas;
 
 
