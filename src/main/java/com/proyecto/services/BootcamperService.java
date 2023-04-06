@@ -10,10 +10,10 @@ import org.springframework.data.domain.Sort;
 import com.proyecto.entities.Bootcamper;
 
 public interface BootcamperService {
-    public List<Bootcamper> findAll(Sort sort); //Busca todo
-    public Bootcamper findById(long idBootcamper); //Busca por Id
-    public void deleteById(long idBootcamper); //Borra
-    public Bootcamper save (Bootcamper bootcamper); //Guarda y actualiza
+    public List<Bootcamper> findAll(Sort sort); 
+    public Bootcamper findById(long id); 
+    public void deleteById(long id); 
+    public Bootcamper save (Bootcamper bootcamper); 
     public Page<Bootcamper> findAll(Pageable pageable);
     public void delete(Bootcamper bootcamper);
    
