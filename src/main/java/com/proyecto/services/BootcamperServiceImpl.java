@@ -30,7 +30,7 @@ public class BootcamperServiceImpl implements BootcamperService {
      
     @Override
     public Bootcamper findById(long id) {
-        return findById(id);
+        return bootcamperDao.findById(id);
     }
 
     @Override

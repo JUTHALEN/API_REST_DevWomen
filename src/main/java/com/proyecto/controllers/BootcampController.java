@@ -76,6 +76,44 @@ public class BootcampController {
 
         return responseEntity;
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> findById(@PathVariable(name = "id") Integer id) {
+
+        ResponseEntity<Map<String, Object>> responseEntity = null;
+        Map<String, Object> responseAsMap = new HashMap<>();
+
+        try {
+
+            Bootcamp bootcamp = bootcampService.findById(id);
+
+            if (bootcamp != null) {
+
+                String successMessage = "Se ha encontrado el bootcamper con id: " + id;
+                responseAsMap.put("mensaje", successMessage);
+                responseAsMap.put("bootcamp", bootcamp);
+                responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.OK);
+
+            } else {
+
+                String errorMessage = "No se ha encontrado el bootcamper con id:";
+                responseAsMap.put("error", errorMessage);
+                responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.NOT_FOUND);
+
+            }
+
+        } catch (Exception e) {
+
+            String errorGrave = "Error grave";
+
+            responseAsMap.put("error", errorGrave);
+
+            responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+
+        return responseEntity;
+
+    }
     // Metodo que inserta un nuevo Bootcamp
 
     @PostMapping

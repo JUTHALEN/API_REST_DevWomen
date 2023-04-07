@@ -1,6 +1,7 @@
 package com.proyecto.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +21,8 @@ public interface BootcamperDao extends JpaRepository <Bootcamper, Long> {
     countQuery = "select count(b) from Bootcamper b")
     public Page<Bootcamper> findAll(Pageable pageable);
 
-    @Query(value = "select b from Bootcamper b left join fetch b.telefonos left join b.correos left join b.idiomas where b.id = :id") //Consulta parametro con nombre
+    @Query(value = "select b from Bootcamper b left join fetch b.telefonos left join b.correos left join b.idiomas left join fetch b.bootcamp where b.id = :id") //Consulta parametro con nombre
     public Bootcamper findById(long id);
+   
+    
 }

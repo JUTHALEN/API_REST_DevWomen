@@ -3,7 +3,10 @@ package com.proyecto.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -75,7 +78,7 @@ public class Bootcamper implements Serializable {
      */
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "idBootcamp")
-    @JsonIgnore
+    //@JsonBackReference
     private Bootcamp bootcamp;
 
     //Relacionar con telefono y correo
@@ -87,7 +90,6 @@ public class Bootcamper implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, mappedBy = "bootcamper")
     private List<Idioma> idiomas;
-
 
 
 }
