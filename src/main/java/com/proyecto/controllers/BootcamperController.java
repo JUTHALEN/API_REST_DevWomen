@@ -83,65 +83,10 @@ public class BootcamperController {
     }
 
     // Metodo que inserta un nuevo Bootcamp
+    /** Para el metodo post es aconsejable primero ir al metodo get(id) y copiar el body de ese que si tiene bootcamp, si se quiere hacer en el metodo get 
+     * habrá que hacerlo desde el bootcamperDao para el findAll que sea left join b.bootcamp
+     */
 
-    // @PostMapping
-    // @Transactional
-    // public ResponseEntity<Map<String, Object>> insert(@Valid @RequestPart(name = "bootcamper") 
-    //                                                   Bootcamper bootcamper, @RequestParam(name = "bootcamp") 
-    //                                                   Bootcamp bootcamp,
-    //                                                   BindingResult result) {
-
-    //     Map<String, Object> responseAsMap = new HashMap<>();
-    //     ResponseEntity<Map<String, Object>> responseEntity = null;
-
-    //     /** Primero comprobar si hay errores en el Bootcamper recibido */
-
-    //     if (result.hasErrors()) {
-    //         List<String> errorMessages = new ArrayList<>();
-    //         for (ObjectError error : result.getAllErrors()) {
-    //             errorMessages.add(error.getDefaultMessage());
-
-    //         }
-    //         responseAsMap.put("errores", errorMessages);
-
-    //         responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.BAD_REQUEST);
-    //         return responseEntity; // si hay error no quiero que se guarde el Bootcamper
-    //     }
-
-    //     Bootcamp bootcampDB = bootcampService.save(bootcamp);
-        
-    //     /**
-    //      * Crear la validación para saber si se ha guardado
-    //      */
-    //     try {
-    //         if (bootcampDB != null) {
-    //              Bootcamper bootcamperDB = bootcamperService.save(bootcamper);
-    //             //  if (bootcamperDB != null) {
-                    
-    //                 bootcamper.setBootcamp(bootcamp);
-    //                 bootcamperService.save(bootcamperDB);
-                       
-    //             // }
-    //             String mensaje = "Bootcamper se ha creado correctamente";
-    //             responseAsMap.put("mensaje", mensaje);
-    //             responseAsMap.put("Bootcamper", bootcamperDB);
-    //             responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.CREATED);
-
-    //         } else {
-    //             String mensaje = "Bootcamper no se ha podido crear";
-    //             responseAsMap.put("mensaje", mensaje);
-    //             responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.NOT_ACCEPTABLE);
-    //         }
-    //     } catch (DataAccessException e) {
-
-    //         String errorGrave = "Ha tenido lugar un error grave y la causa más probable puede ser" +
-    //                 e.getMostSpecificCause();
-    //         responseAsMap.put("errorGrave", errorGrave);
-    //         responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.INTERNAL_SERVER_ERROR);
-    //     }
-
-    //     return responseEntity;
-    // }
     @PostMapping
     @Transactional
     public ResponseEntity<Map<String, Object>> insert(@Valid @RequestPart(name = "bootcamper") Bootcamper bootcamper,
@@ -161,18 +106,11 @@ public class BootcamperController {
             return responseEntity; // si hay error no quiero que se guarde el Bootcamper
         }
     
-        // Bootcamp bootcampDB = bootcampService.save(bootcamper.getBootcamp());
-        // /**
-        //  * Crear la validación para saber si se ha guardado
-        //  */
-        // try {
-        //     if (bootcampDB != null) {
-        //        bootcamper.setBootcamp(bootcampDB);
-        //         Bootcamper bootcamperDB = bootcamperService.save(bootcamper);
+        
         Bootcamp bootcampDB = bootcampService.findById(bootcamper.getBootcamp().getId());
             try{
             if (bootcampDB == null) {
-                bootcampDB = bootcampService.save(bootcamper.getBootcamp());
+                bootcampDB = bootcampService.save(bootcamper.getBootcamp()); // Veo si exixste el bootcamp con ese id
             }
             // Asignar el Bootcamp existente o recién creado al Bootcamper
             bootcamper.setBootcamp(bootcampDB);
