@@ -142,7 +142,7 @@ public class BootcamperController {
 
     //     return responseEntity;
     // }
-    @PostMapping("/bootcampers")
+    @PostMapping
     @Transactional
     public ResponseEntity<Map<String, Object>> insert(@Valid @RequestPart(name = "bootcamper") Bootcamper bootcamper,
                                                       BindingResult result) {
@@ -161,14 +161,25 @@ public class BootcamperController {
             return responseEntity; // si hay error no quiero que se guarde el Bootcamper
         }
     
-        Bootcamp bootcampDB = bootcampService.save(bootcamper.getBootcamp());
-        /**
-         * Crear la validación para saber si se ha guardado
-         */
-        try {
-            if (bootcampDB != null) {
-                bootcamper.setBootcamp(bootcampDB);
-                Bootcamper bootcamperDB = bootcamperService.save(bootcamper);
+        // Bootcamp bootcampDB = bootcampService.save(bootcamper.getBootcamp());
+        // /**
+        //  * Crear la validación para saber si se ha guardado
+        //  */
+        // try {
+        //     if (bootcampDB != null) {
+        //        bootcamper.setBootcamp(bootcampDB);
+        //         Bootcamper bootcamperDB = bootcamperService.save(bootcamper);
+        Bootcamp bootcampDB = bootcampService.findById(bootcamper.getBootcamp().getId());
+            try{
+            if (bootcampDB == null) {
+                bootcampDB = bootcampService.save(bootcamper.getBootcamp());
+            }
+            // Asignar el Bootcamp existente o recién creado al Bootcamper
+            bootcamper.setBootcamp(bootcampDB);
+
+            Bootcamper bootcamperDB = bootcamperService.save(bootcamper);
+              
+            if(bootcamperDB != null){
                 String mensaje = "Bootcamper se ha creado correctamente";
                 responseAsMap.put("mensaje", mensaje);
                 responseAsMap.put("Bootcamper", bootcamperDB);
