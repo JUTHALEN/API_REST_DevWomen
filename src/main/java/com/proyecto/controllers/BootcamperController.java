@@ -123,7 +123,21 @@ public class BootcamperController {
             responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.BAD_REQUEST);
             return responseEntity; // si hay error no quiero que se guarde el Bootcamper
         }
-    
+        if(!file.isEmpty()) {
+            String fileCode = fileUploadUtil.saveFile(file.getOriginalFilename(), file); //recibe nombre del archivo y su contenido
+            //Hemos lanzado una excepcion para arriba
+            bootcamper.setFoto(fileCode + "-" + file.getOriginalFilename());
+
+            
+            FileUploadResponse fileUploadResponse = FileUploadResponse
+            .builder()
+            .fileName(fileCode + "-" + file.getOriginalFilename())
+            .downloadURI("/bootcampers/downloadFile/" + fileCode + "-" + file.getOriginalFilename())
+            .size(file.getSize())
+            .build();
+
+            responseAsMap.put("info de la imagen", fileUploadResponse);
+     }
         
         Bootcamp bootcampDB = bootcampService.findById(bootcamper.getBootcamp().getId());
            
@@ -135,27 +149,12 @@ public class BootcamperController {
             bootcamper.setBootcamp(bootcampDB);
 
             Bootcamper bootcamperDB = bootcamperService.save(bootcamper);
-            try { 
                 /**
          * Crear la validación para saber si se ha guardado
          */
             if(bootcamperDB != null){
          /*Previamente a guardar un Bootcamp comprobamos si nos han enviado una imagen */
-                if(!file.isEmpty()) {
-                String fileCode = fileUploadUtil.saveFile(file.getOriginalFilename(), file); //recibe nombre del archivo y su contenido
-                //Hemos lanzado una excepcion para arriba
-                bootcamper.setFoto(fileCode + "-" + file.getOriginalFilename());
-
-                
-                FileUploadResponse fileUploadResponse = FileUploadResponse
-                .builder()
-                .fileName(fileCode + "-" + file.getOriginalFilename())
-                .downloadURI("/bootcampers/downloadFile/" + fileCode + "-" + file.getOriginalFilename())
-                .size(file.getSize())
-                .build();
-
-                responseAsMap.put("info de la imagen", fileUploadResponse);
-         }
+               
                 String mensaje = "Bootcamper se ha creado correctamente";
                 responseAsMap.put("mensaje", mensaje);
                 responseAsMap.put("Bootcamper", bootcamperDB);
