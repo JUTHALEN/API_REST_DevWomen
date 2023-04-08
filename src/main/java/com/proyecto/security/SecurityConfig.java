@@ -15,10 +15,11 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private static final String[] SECURED_URLs = {"/bootcampers/**"};
+   // Habrá que hacerlo de forma que solo admin pueda dar de alta al bootcamp
+   // private static final String[] SECURED_URLs = {"/bootcamps/**"};
 
     private static final String[] UN_SECURED_URLs = {
-            "/users/**"
-    };    
+            "/users/**"};    
 
 
     @Bean
