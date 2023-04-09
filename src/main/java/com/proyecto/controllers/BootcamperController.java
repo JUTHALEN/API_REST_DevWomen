@@ -105,7 +105,7 @@ public class BootcamperController {
     @Transactional
     public ResponseEntity<Map<String, Object>> insert(@Valid @RequestPart(name = "bootcamper") Bootcamper bootcamper,
                                                       BindingResult result,
-                                                       @RequestPart(name = "file") MultipartFile file) throws IOException {
+                                                      @RequestPart(name = "file") MultipartFile file) throws IOException {
 
         Map<String, Object> responseAsMap = new HashMap<>();
         ResponseEntity<Map<String, Object>> responseEntity = null;
@@ -265,7 +265,7 @@ public class BootcamperController {
         Bootcamper bootcamperDB = bootcamperService.save(bootcamper);
 
         try {
-            if (bootcamperDB != null) { // Aqui estoy haciendo la validacion de si se ha guardado
+            if (bootcamperDB != null) { 
                 String mensaje = "Bootcamper actualizado correctamente";
                 responseAsMap.put("mensaje", mensaje);
                 responseAsMap.put("bootcamp", bootcamperDB);

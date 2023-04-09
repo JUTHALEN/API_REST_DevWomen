@@ -9,7 +9,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.proyecto.user.Role;
 import com.proyecto.user.User;
 
 import lombok.Data;
@@ -27,9 +26,9 @@ public class MyUserDetails implements UserDetails {
         this.password = user.getPassword();
 
         authorities = Arrays
-                .stream(Role.values().toString().split(","))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+            .stream(user.getRole().toString().split(","))
+            .map(SimpleGrantedAuthority::new)
+            .collect(Collectors.toList());
     }
 
     @Override

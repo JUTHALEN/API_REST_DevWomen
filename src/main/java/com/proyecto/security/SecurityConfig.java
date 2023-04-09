@@ -14,9 +14,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private static final String[] SECURED_URLs = {"/bootcampers/**"};
+    private static final String[] SECURED_URLs = {"/bootcampers/**","/bootcamps/**"};
    // Habrá que hacerlo de forma que solo admin pueda dar de alta al bootcamp
-   // private static final String[] SECURED_URLs = {"/bootcamps/**"};
+   //private static final String[] SECURED_URLs = {"/bootcamps/**"};
 
     private static final String[] UN_SECURED_URLs = {"/users/**"};    
 
@@ -35,16 +35,10 @@ public class SecurityConfig {
             .hasAuthority("ADMIN").anyRequest()
             .authenticated().and().httpBasic(withDefaults());
 
-        return http.build();
+    return http.build();
 
     }
-
-    // http.csrf().disable();
-    // http.authorizeHttpRequests()
-    //         .requestMatchers(UN_SECURED_URLs).permitAll().and()
-    //         .authorizeHttpRequests().requestMatchers(SECURED_URLs)
-    //         .hasAuthority("ADMIN").anyRequest()
-    //         .authenticated().and().httpBasic(withDefaults());    
+ 
     
     // public static void main(String[] args) {
     //     System.out.println(new SecurityConfig().passwordEncoder().encode("123456"));

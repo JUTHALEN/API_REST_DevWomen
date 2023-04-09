@@ -55,14 +55,12 @@ public class UserServiceImpl implements UserService {
         User existingUser = userRepository.findByEmail(user.getEmail())
             .orElseThrow(() -> new UsernameNotFoundException("No existe el usuario con el email: " + user.getEmail()));
 
-        // Actualizar las propiedades del usuario
         existingUser.setFirstName(user.getFirstName());
         existingUser.setLastName(user.getLastName());
         existingUser.setEmail(user.getEmail());
         existingUser.setPassword(user.getPassword());
         existingUser.setRole(user.getRole());
 
-        // Guardar los cambios en la base de datos
         return userRepository.save(existingUser);
     }
 
