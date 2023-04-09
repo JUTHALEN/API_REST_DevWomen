@@ -29,14 +29,14 @@ public class BootcamperServiceImpl implements BootcamperService {
      }
      
     @Override
-    public Bootcamper findById(long idBootcamper) {
-        return bootcamperDao.findById(idBootcamper);
+    public Bootcamper findById(long id) {
+        return bootcamperDao.findById(id);
     }
 
     @Override
     @Transactional
-    public void deleteById(long idBootcamper) {
-        bootcamperDao.deleteById(idBootcamper);
+    public void deleteById(long id) {
+        bootcamperDao.deleteById(id);
     }
 
     @Override

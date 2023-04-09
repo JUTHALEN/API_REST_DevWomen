@@ -14,7 +14,7 @@ import com.proyecto.entities.Bootcamp;
 
 @Repository
 public interface BootcampDao extends JpaRepository<Bootcamp, Long> {
-    
+  
     @Query(value = "select b from Bootcamp b left join fetch b.bootcampers") 
      
      public List<Bootcamp> findAll(Sort sort);
