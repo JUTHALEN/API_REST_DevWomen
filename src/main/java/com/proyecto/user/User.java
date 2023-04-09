@@ -27,8 +27,7 @@ public class User {
     private String firstName;
     private String lastName;
 
-    @Column(unique = true) // No se repite, pero no forma parte de la PK
-    // @NaturalId(mutable = true) Para que forme parte de la PK
+    @Column(unique = true)
     private String email;
 
     private String password;
