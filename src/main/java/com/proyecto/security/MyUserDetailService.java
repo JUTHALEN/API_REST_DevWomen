@@ -1,26 +1,26 @@
-// package com.proyecto.security;
+package com.proyecto.security;
 
-// import org.springframework.security.core.userdetails.UserDetails;
-// import org.springframework.security.core.userdetails.UserDetailsService;
-// import org.springframework.security.core.userdetails.UsernameNotFoundException;
-// import org.springframework.stereotype.Service;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
-// import com.proyecto.user.UserRepository;
+import com.proyecto.user.UserRepository;
 
-// import lombok.RequiredArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-// @Service
-// @RequiredArgsConstructor
-// public class MyUserDetailService implements UserDetailsService {
+@Service
+@RequiredArgsConstructor
+public class MyUserDetailService implements UserDetailsService {
 
-//     private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-//     @Override
-//     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//         return userRepository.findByEmail(username)
-//                 .map(MyUserDetails::new)
-//                 .orElseThrow(
-//                         () -> new UsernameNotFoundException("Not user found"));
-//     }
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByEmail(username)
+                .map(MyUserDetails::new)
+                .orElseThrow(
+                        () -> new UsernameNotFoundException("Not user found"));
+    }
 
-// }
+}

@@ -47,9 +47,8 @@ public class BootcampController {
     @Autowired
     private BootcampService bootcampService;
 
-
     @Autowired
-    private FileUploadUtil fileUploadUtil; 
+    private FileUploadUtil fileUploadUtil;
 
     @Autowired
     private FileDownloadUtil fileDownloadUtil;
@@ -88,6 +87,7 @@ public class BootcampController {
 
         return responseEntity;
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> findById(@PathVariable(name = "id") Integer id) {
 
@@ -128,11 +128,10 @@ public class BootcampController {
     }
     // Metodo que inserta un nuevo Bootcamp
 
-    @PostMapping ( consumes = "multipart/form-data" )
+    @PostMapping(consumes = "multipart/form-data")
     @Transactional
-    public ResponseEntity<Map<String, Object>> insert
-    (@Valid @RequestPart(name = "bootcamp") Bootcamp bootcamp,
-    BindingResult result, @RequestPart(name = "file") MultipartFile file) throws IOException {
+    public ResponseEntity<Map<String, Object>> insert(@Valid @RequestPart(name = "bootcamp") Bootcamp bootcamp,
+            BindingResult result, @RequestPart(name = "file") MultipartFile file) throws IOException {
 
         Map<String, Object> responseAsMap = new HashMap<>();
 
@@ -152,19 +151,22 @@ public class BootcampController {
 
             return responseEntity; // si hay error no quiero que se guarde el Bootcamp
         }
-        
-        /** Previamente a guardar un Bootcamp comprobamos si nos han enviado una imagen */
-        if(!file.isEmpty()) {
-            String fileCode = fileUploadUtil.saveFile(file.getOriginalFilename(), file); //recibe nombre del archivo y su contenido
+
+        /**
+         * Previamente a guardar un Bootcamp comprobamos si nos han enviado una imagen
+         */
+        if (!file.isEmpty()) {
+            String fileCode = fileUploadUtil.saveFile(file.getOriginalFilename(), file); // recibe nombre del archivo y
+                                                                                         // su contenido
             bootcamp.setLogo(fileCode + "-" + file.getOriginalFilename());
 
             /** Devolver informacion respecto al archivo recibido */
             FileUploadResponse fileUploadResponse = FileUploadResponse
-            .builder()
-            .fileName(fileCode + "-" + file.getOriginalFilename())
-            .downloadURI("/bootcamps/downloadFile/" + fileCode + "-" + file.getOriginalFilename())
-            .size(file.getSize())
-            .build();
+                    .builder()
+                    .fileName(fileCode + "-" + file.getOriginalFilename())
+                    .downloadURI("/bootcamps/downloadFile/" + fileCode + "-" + file.getOriginalFilename())
+                    .size(file.getSize())
+                    .build();
 
             responseAsMap.put("info de la imagen", fileUploadResponse);
 
@@ -172,7 +174,7 @@ public class BootcampController {
 
         Bootcamp bootcampDB = bootcampService.save(bootcamp);
         try {
-            if (bootcampDB != null) { // Aqui estoy haciendo la validacion de si se ha guardado                
+            if (bootcampDB != null) { // Aqui estoy haciendo la validacion de si se ha guardado
                 String mensaje = "El Bootcamp se ha creado correctamente";
                 responseAsMap.put("mensaje", mensaje);
                 responseAsMap.put("Bootcamp", bootcampDB);
@@ -236,7 +238,7 @@ public class BootcampController {
                 responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.NOT_ACCEPTABLE);
             }
         } catch (DataAccessException e) {
-            
+
             String errorGrave = "Ha tenido lugar un error grave y la causa más probable puede ser" +
                     e.getMostSpecificCause();
             responseAsMap.put("errorGrave", errorGrave);
@@ -249,31 +251,31 @@ public class BootcampController {
     // Metodo que borra los bootcammmps
     @Transactional
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteBootcamp(@PathVariable(name = "id") Integer id){
+    public ResponseEntity<String> deleteBootcamp(@PathVariable(name = "id") Integer id) {
         ResponseEntity<String> responseEntity = null;
-       
+
         Bootcamp bootcamp = bootcampService.findById(id);
-      
+
         try {
             if (bootcamp != null) {
-            String mensaje = "El bootcamp se ha borrado correctamente";
-            bootcampService.delete(bootcamp);
-            responseEntity = new ResponseEntity<String>(mensaje, HttpStatus.OK);
-        } else{
-            responseEntity = new ResponseEntity<String>("No existe el bootcamp",HttpStatus.NO_CONTENT);
-        }
-    } catch (DataAccessException e) {
-           e.getMostSpecificCause();
+                String mensaje = "El bootcamp se ha borrado correctamente";
+                bootcampService.delete(bootcamp);
+                responseEntity = new ResponseEntity<String>(mensaje, HttpStatus.OK);
+            } else {
+                responseEntity = new ResponseEntity<String>("No existe el bootcamp", HttpStatus.NO_CONTENT);
+            }
+        } catch (DataAccessException e) {
+            e.getMostSpecificCause();
             String errorGrave = "Error grave";
             responseEntity = new ResponseEntity<String>(errorGrave, HttpStatus.INTERNAL_SERVER_ERROR);
-            
+
         }
         return responseEntity;
     }
 
-    /** Implementa filedownnload end point API */    
+    /** Implementa filedownnload end point API */
 
-    @GetMapping("/downloadFile/{fileCode}") 
+    @GetMapping("/downloadFile/{fileCode}")
     public ResponseEntity<?> downloadFile(@PathVariable(name = "fileCode") String fileCode) {
 
         Resource resource = null;
@@ -292,9 +294,9 @@ public class BootcampController {
         String headerValue = "attachment; filename=\"" + resource.getFilename() + "\"";
 
         return ResponseEntity.ok()
-        .contentType(MediaType.parseMediaType(contentType)) //MediaType de spring
-        .header(HttpHeaders.CONTENT_DISPOSITION, headerValue)
-        .body(resource);
+                .contentType(MediaType.parseMediaType(contentType)) // MediaType de spring
+                .header(HttpHeaders.CONTENT_DISPOSITION, headerValue)
+                .body(resource);
 
     }
 

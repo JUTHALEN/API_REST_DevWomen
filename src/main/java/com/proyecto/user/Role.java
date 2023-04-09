@@ -1,5 +1,5 @@
-// package com.proyecto.user;
+package com.proyecto.user;
 
-// public enum Role {
-//     ADMIN, USER
-// }
+public enum Role {
+    ADMIN, USER
+}

@@ -1,42 +1,47 @@
-// package com.proyecto.user;
+package com.proyecto.user;
 
-// import lombok.RequiredArgsConstructor;
-// import org.springframework.http.HttpStatus;
-// import org.springframework.http.ResponseEntity;
-// import org.springframework.web.bind.annotation.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-// import java.util.List;
+import jakarta.transaction.Transactional;
 
-// @RestController
-// @RequestMapping("/users")
-// @RequiredArgsConstructor
-// public class UserController {
+import java.util.List;
 
-//     private final UserService userService;
+@RestController
+@RequestMapping("/users")
+@RequiredArgsConstructor
+public class UserController {
 
-//     @GetMapping("/all")
-//     public ResponseEntity<List<User>> getAllUsers() {
-//         return new ResponseEntity<>(userService.findAll(), HttpStatus.FOUND);
-//     }
+    private final UserService userService;
 
-//     @PostMapping("/add")
-//     public ResponseEntity<User> add(@RequestBody User user) {
-//         return ResponseEntity.ok(userService.add(user));
-//     }
+    @GetMapping("/all")
+    public ResponseEntity<List<User>> getAllUsers() {
+        return new ResponseEntity<>(userService.findAll(), HttpStatus.FOUND);
+    }
 
-//     @GetMapping("/{email}")
-//     public User getByEmail(@PathVariable("email") String email) {
-//         return userService.findByEmail(email);
-//     }
+    @PostMapping("/add")
+    public ResponseEntity<User> add(@RequestBody User user) {
+        return ResponseEntity.ok(userService.add(user));
+    }
 
-//     @DeleteMapping("/{email}")
-//     public void delete(@PathVariable("email") String email) {
-//         userService.deleteByEmail(email);
-//     }
+    @GetMapping("/{email}")
+    @Transactional
+    public User getByEmail(@PathVariable("email") String email) {
+        return userService.findByEmail(email);
+    }
 
-//     @PutMapping("/update")
-//     public ResponseEntity<User> update(@RequestBody User user) {
-//         return ResponseEntity.ok(userService.update(user));
-//     }
+    @DeleteMapping("/{email}")
+    @Transactional
+    public void delete(@PathVariable("email") String email) {
+        userService.deleteByEmail(email);
+    }
 
-// }
+    @PutMapping("/update")
+    @Transactional
+    public ResponseEntity<User> update(@RequestBody User user) {
+        return ResponseEntity.ok(userService.update(user));
+    }
+
+}
