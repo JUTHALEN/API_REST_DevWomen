@@ -1,11 +1,11 @@
-package com.proyecto.user;
+// package com.proyecto.user;
 
-import java.util.List;
+// import java.util.List;
 
-public interface UserService {
-    User add(User user);
-    List<User> findAll();
-    void deleteByEmail(String email);
-    User findByEmail(String email);
-    User update(User user);
-}
+// public interface UserService {
+//     User add(User user);
+//     List<User> findAll();
+//     void deleteByEmail(String email);
+//     User findByEmail(String email);
+//     User update(User user);
+// }
