@@ -178,9 +178,7 @@ public class BootcamperController {
         } catch (Exception e) {
 
             String errorGrave = "Error grave";
-
             responseAsMap.put("error", errorGrave);
-
             responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
@@ -203,9 +201,7 @@ public class BootcamperController {
          */
 
         Map<String, Object> responseAsMap = new HashMap<>();
-
         ResponseEntity<Map<String, Object>> responseEntity = null;
-
         /** Primero comprobar si hay errores en el bootcamper recibido */
 
         if (result.hasErrors()) {
@@ -216,9 +212,7 @@ public class BootcamperController {
 
             }
             responseAsMap.put("errores", errorMessages);
-
             responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.BAD_REQUEST);
-
             return responseEntity;
         }
         /**
@@ -269,7 +263,6 @@ public class BootcamperController {
     public ResponseEntity<String> deleteBootcamper(@PathVariable(name = "id") Integer id) {
 
         ResponseEntity<String> responseEntity = null;
-
         Bootcamper bootcamper = bootcamperService.findById(id);
 
         try {
