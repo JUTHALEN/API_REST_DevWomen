@@ -18,8 +18,7 @@ public class SecurityConfig {
    // Habrá que hacerlo de forma que solo admin pueda dar de alta al bootcamp
    // private static final String[] SECURED_URLs = {"/bootcamps/**"};
 
-    private static final String[] UN_SECURED_URLs = {
-            "/users/**"};    
+    private static final String[] UN_SECURED_URLs = {"/users/**"};    
 
 
     @Bean

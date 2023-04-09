@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.tomcat.util.http.fileupload.FileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.dao.DataAccessException;
@@ -337,7 +336,7 @@ public class BootcamperController {
         String headerValue = "attachment; filename=\"" + resource.getFilename() + "\"";
 
         return ResponseEntity.ok()
-        .contentType(MediaType.parseMediaType(contentType)) //MediaType de spring
+        .contentType(MediaType.parseMediaType(contentType)) 
         .header(HttpHeaders.CONTENT_DISPOSITION, headerValue)
         .body(resource);
 

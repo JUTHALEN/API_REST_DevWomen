@@ -33,12 +33,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.proyecto.entities.Bootcamp;
-<<<<<<< HEAD
-=======
 import com.proyecto.model.FileUploadResponse;
->>>>>>> origin/mainTodo
 import com.proyecto.services.BootcampService;
-import com.proyecto.services.BootcamperService;
 import com.proyecto.utilities.FileDownloadUtil;
 import com.proyecto.utilities.FileUploadUtil;
 

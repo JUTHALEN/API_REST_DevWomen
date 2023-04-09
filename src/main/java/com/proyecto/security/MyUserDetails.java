@@ -14,7 +14,6 @@ import com.proyecto.user.User;
 
 import lombok.Data;
 
-
 @Data
 public class MyUserDetails implements UserDetails {
 
@@ -28,11 +27,10 @@ public class MyUserDetails implements UserDetails {
         this.password = user.getPassword();
 
         authorities = Arrays
-                   .stream(Role.values().toString().split(","))
-                   .map(SimpleGrantedAuthority::new)
-                   .collect(Collectors.toList());
+                .stream(Role.values().toString().split(","))
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -68,5 +66,5 @@ public class MyUserDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-    
+
 }
