@@ -2,7 +2,7 @@ package com.proyecto.entities;
 
 import java.io.Serializable;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
@@ -42,6 +42,6 @@ public class Correo implements Serializable {
      */
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JsonIgnore
+    @JsonBackReference
     private Bootcamper bootcamper;
 }
