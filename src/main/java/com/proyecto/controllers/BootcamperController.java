@@ -101,7 +101,7 @@ public class BootcamperController {
      * habrá que hacerlo desde el bootcamperDao para el findAll que sea left join b.bootcamp
      */
 
-    @PostMapping( consumes = "multipart/form-data")
+    @PostMapping(consumes = "multipart/form-data")
     @Transactional
     public ResponseEntity<Map<String, Object>> insert(@Valid @RequestPart(name = "bootcamper") Bootcamper bootcamper,
                                                       BindingResult result,
