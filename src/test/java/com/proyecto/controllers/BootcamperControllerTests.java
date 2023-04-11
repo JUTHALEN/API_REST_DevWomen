@@ -18,7 +18,16 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.proyecto.entities.Bootcamp;
 import com.proyecto.entities.Bootcamper;
+import com.proyecto.entities.Correo;
+import com.proyecto.entities.Idioma;
+import com.proyecto.entities.Telefono;
+import com.proyecto.entities.Bootcamp.Language;
+import com.proyecto.entities.Bootcamp.Orientacion;
+import com.proyecto.entities.Bootcamper.Formacion;
+import com.proyecto.entities.Bootcamper.Genero;
+import com.proyecto.entities.Idioma.Nivel;
 import com.proyecto.services.BootcamperService;
+import com.proyecto.services.TelefonoService;
 import com.proyecto.utilities.FileDownloadUtil;
 import com.proyecto.utilities.FileUploadUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,8 +40,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.List;
 
+@SpringBootTest
 
+@AutoConfigureMockMvc
+@AutoConfigureTestDatabase(replace = Replace.NONE)
 public class BootcamperControllerTests {
     
     @Autowired
@@ -62,9 +77,70 @@ public class BootcamperControllerTests {
     }
 
     @Test
-    void testGuardarBootcamper() {
+    void testGuardarBootcamper() throws Exception {
 
         //given
 
+        Bootcamp bootcamp = Bootcamp.builder()
+                .nombre("bootcamp")
+                .orientacion(Orientacion.BACK_END)
+                .descripcion(null)
+                .fechaInicio(LocalDate.of(2023, Month.JANUARY, 23))
+                .fechaFin(LocalDate.of(2023, Month.APRIL, 14))
+                .language(Language.INGLES)
+                .build();
 
+                List<Telefono> telefonos;
+                telefonos.add(Telefono.builder()
+                .numero("666000000")
+                .build());
+
+                List<Correo> correos;
+                correos.add(Correo.builder()
+                .email("bootcamper@bootcamp.es")
+                .build());
+
+                List<Idioma> idiomas;
+                idiomas.add(Idioma.builder()
+                .language(Idioma.Language.INGLES)
+                .nivel(Nivel.B2)
+                .certificado(true)
+                .build());
+
+
+    Bootcamper bootcamper = Bootcamper.builder()
+    .nombre("bootcamper")
+    .primerApellido("apellido1")
+    .segundoApellido("apellido2")
+    .genero(Genero.MUJER)
+    .DNI("00000000C")
+    .salario(1200.00)
+    .formacion(Formacion.GRADO_UNIVERSITARIO)
+    .fechaNacimiento(LocalDate.of(1990, Month.APRIL, 12))
+    .fechaAlta(LocalDate.of(2023, Month.APRIL, 23))
+    .bootcamp(bootcamp)
+    .telefonos(telefonos)
+    .correos(correos)
+    .idiomas(idiomas)
+    .build();
+
+    given(bootcamperService.save(any(Bootcamper.class)))
+    .willAnswer(invocation -> invocation.getArgument(0));
+
+
+    // when
+
+    String jsonStringBootcamper = objectMapper.writeValueAsString(bootcamper);
+        System.out.println(jsonStringBootcamper);
+    ResultActions response = mockMvc
+                .perform(post("/bootcampers")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonStringBootcamper));
+
+    // then
+
+    response.andDo(print())
+                .andExpect(status().isUnauthorized());
+
+    }
 }
