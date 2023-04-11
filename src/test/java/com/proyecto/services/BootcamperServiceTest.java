@@ -49,7 +49,6 @@ public class BootcamperServiceTest {
         Bootcamp bootcamp = Bootcamp.builder()
         .nombre("Bootcamp formacion")
         .descripcion(null)
-        .logo(null)
         .orientacion(Orientacion.BACK_END)
         .language(Language.FRANCES)
         .fechaInicio(null)
