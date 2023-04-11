@@ -44,7 +44,6 @@ public class Bootcamp implements Serializable {
     @Size(min = 4, max = 25, message = "El nombre tiene que estar entre 4 y 25 caracteres")
     private String nombre;
 
-    private String logo;
     @Enumerated(EnumType.STRING)
     private Orientacion orientacion;
     private String descripcion;

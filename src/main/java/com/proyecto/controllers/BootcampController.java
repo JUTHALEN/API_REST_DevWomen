@@ -1,6 +1,5 @@
 package com.proyecto.controllers;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,12 +45,6 @@ public class BootcampController {
 
     @Autowired
     private BootcampService bootcampService;
-
-    @Autowired
-    private FileUploadUtil fileUploadUtil;
-
-    @Autowired
-    private FileDownloadUtil fileDownloadUtil;
 
     // Metodo que encuentra los bootcamps
     @GetMapping
@@ -128,10 +121,10 @@ public class BootcampController {
     }
     // Metodo que inserta un nuevo Bootcamp
 
-    @PostMapping(consumes = "multipart/form-data")
+    @PostMapping
     @Transactional
     public ResponseEntity<Map<String, Object>> insert(@Valid @RequestPart(name = "bootcamp") Bootcamp bootcamp,
-            BindingResult result, @RequestPart(name = "file") MultipartFile file) throws IOException {
+            BindingResult result){
 
         Map<String, Object> responseAsMap = new HashMap<>();
 
@@ -149,32 +142,13 @@ public class BootcampController {
 
             responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.BAD_REQUEST);
 
-            return responseEntity; // si hay error no quiero que se guarde el Bootcamp
-        }
-
-        /**
-         * Previamente a guardar un Bootcamp comprobamos si nos han enviado una imagen
-         */
-        if (!file.isEmpty()) {
-            String fileCode = fileUploadUtil.saveFile(file.getOriginalFilename(), file); // recibe nombre del archivo y
-                                                                                         // su contenido
-            bootcamp.setLogo(fileCode + "-" + file.getOriginalFilename());
-
-            /** Devolver informacion respecto al archivo recibido */
-            FileUploadResponse fileUploadResponse = FileUploadResponse
-                    .builder()
-                    .fileName(fileCode + "-" + file.getOriginalFilename())
-                    .downloadURI("/bootcamps/downloadFile/" + fileCode + "-" + file.getOriginalFilename())
-                    .size(file.getSize())
-                    .build();
-
-            responseAsMap.put("info de la imagen", fileUploadResponse);
-
+            return responseEntity; 
         }
 
         Bootcamp bootcampDB = bootcampService.save(bootcamp);
+
         try {
-            if (bootcampDB != null) { // Aqui estoy haciendo la validacion de si se ha guardado
+            if (bootcampDB != null) {
                 String mensaje = "El Bootcamp se ha creado correctamente";
                 responseAsMap.put("mensaje", mensaje);
                 responseAsMap.put("Bootcamp", bootcampDB);
@@ -272,32 +246,4 @@ public class BootcampController {
         }
         return responseEntity;
     }
-
-    /** Implementa filedownnload end point API */
-
-    @GetMapping("/downloadFile/{fileCode}")
-    public ResponseEntity<?> downloadFile(@PathVariable(name = "fileCode") String fileCode) {
-
-        Resource resource = null;
-
-        try {
-            resource = fileDownloadUtil.getFileAsResource(fileCode);
-        } catch (IOException e) {
-            return ResponseEntity.internalServerError().build();
-        }
-
-        if (resource == null) {
-            return new ResponseEntity<>("Archivo no encontrado", HttpStatus.NOT_FOUND);
-        }
-
-        String contentType = "application/octet-stream";
-        String headerValue = "attachment; filename=\"" + resource.getFilename() + "\"";
-
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(contentType)) // MediaType de spring
-                .header(HttpHeaders.CONTENT_DISPOSITION, headerValue)
-                .body(resource);
-
-    }
-
 }
