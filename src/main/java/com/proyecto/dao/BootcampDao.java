@@ -22,6 +22,6 @@ public interface BootcampDao extends JpaRepository<Bootcamp, Long> {
      countQuery = "select count(b) from Bootcamp b left join b.bootcampers")
   
      public Page<Bootcamp> findAll(Pageable pageable);
-  @Query(value = "select b from Bootcamp b left join fetch b.bootcampers where b.id = :id") 
-  public Bootcamp findById(long id);
+    @Query(value = "select b from Bootcamp b left join fetch b.bootcampers where b.id = :id") 
+    public Bootcamp findById(long id);
 }
