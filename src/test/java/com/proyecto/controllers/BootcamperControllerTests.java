@@ -151,4 +151,72 @@ public class BootcamperControllerTests {
 
     }
 
+    @Test
+    // @WithMockUser(username = "llanos@llanos",
+    // authorities = {"ADMIN", "USER"})
+    void testGuardarBootcamperConUserMocked() throws Exception{
+
+        //given
+
+        Bootcamp bootcamp = Bootcamp.builder()
+                .nombre("bootcamp")
+                .orientacion(Orientacion.BACK_END)
+                .descripcion(null)
+                .fechaInicio(LocalDate.of(2023, Month.JANUARY, 23))
+                .fechaFin(LocalDate.of(2023, Month.APRIL, 14))
+                .language(Bootcamp.Language.INGLES)
+                .build();
+
+                List<Telefono> telefonos= new ArrayList<>();
+                telefonos.add(Telefono.builder()
+                .numero("666000000")
+                .build());
+
+                List<Correo> correos= new ArrayList<>();
+                correos.add(Correo.builder()
+                .email("bootcamper@bootcamp.es")
+                .build());
+
+                List<Idioma> idiomas = new ArrayList<>();
+                idiomas.add(Idioma.builder()
+                .language(Idioma.Language.INGLES)
+                .nivel(Nivel.B2)
+                .certificado(true)
+                .build());
+
+
+        Bootcamper bootcamper = Bootcamper.builder()
+        .nombre("bootcamper")
+        .primerApellido("apellido1")
+        .segundoApellido("apellido2")
+        .genero(Genero.MUJER)
+        .DNI("00000000C")
+        .salario(1200.00)
+        .formacion(Formacion.GRADO_UNIVERSITARIO)
+        .fechaNacimiento(LocalDate.of(1990, Month.APRIL, 12))
+        .fechaAlta(LocalDate.of(2023, Month.APRIL, 23))
+        .bootcamp(bootcamp)
+        .telefonos(telefonos)
+        .correos(correos)
+        .idiomas(idiomas)
+        .build();
+
+        given(bootcamperService.save(any(Bootcamper.class)))
+        .willAnswer(invocation -> invocation.getArgument(0));
+
+
+    // when
+
+    String jsonStringBootcamper = objectMapper.writeValueAsString(bootcamper);
+        System.out.println(jsonStringBootcamper);
+    ResultActions response = mockMvc
+                .perform(post("/bootcampers")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonStringBootcamper));
+
+    // then
+
+    response.andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
 }
