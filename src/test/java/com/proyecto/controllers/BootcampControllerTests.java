@@ -18,6 +18,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.proyecto.entities.Bootcamp;
 import com.proyecto.entities.Bootcamper;
+import com.proyecto.entities.Bootcamp.Orientacion;
 import com.proyecto.services.BootcampService;
 import com.proyecto.services.BootcamperService;
 import com.proyecto.utilities.FileDownloadUtil;
@@ -31,6 +32,9 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.time.LocalDate;
+import java.time.Month;
 
 
 @SpringBootTest // levanta el contexto de Spring completamente para lo que necesitamos
@@ -65,6 +69,34 @@ public class BootcampControllerTests {
                 .build();
     }
 
-    
+    @Test
+    void testGuardarBootcamp() throws Exception {
 
-}
+        //given
+
+        Bootcamp bootcamp = Bootcamp.builder()
+                .nombre("bootcamp")
+                .orientacion(Orientacion.BACK_END)
+                .descripcion(null)
+                .fechaInicio(LocalDate.of(2023, Month.JANUARY, 23))
+                .fechaFin(LocalDate.of(2023, Month.APRIL, 14))
+                .language(Bootcamp.Language.INGLES)
+                .build();
+
+        // when
+
+        String jsonStringBootcamp = objectMapper.writeValueAsString(bootcamp);
+        System.out.println(jsonStringBootcamp);
+        ResultActions response = mockMvc
+                    .perform(post("/bootcampers")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(jsonStringBootcamp));
+
+        // then
+
+        response.andDo(print())
+                    .andExpect(status().isUnauthorized());
+
+    }
+
+    }
