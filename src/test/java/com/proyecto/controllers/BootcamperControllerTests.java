@@ -52,8 +52,7 @@ import java.util.List;
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase(replace = Replace.NONE)//para que use nuestra base de datos de sql, en vez de una base de datos en memoria
 // replace none para que la use tal cual, no la sustituya
-@WithMockUser(username = "llanos@llanos",
-authorities = {"ADMIN", "USER"}) 
+
 public class BootcamperControllerTests {   
 
     @Autowired
