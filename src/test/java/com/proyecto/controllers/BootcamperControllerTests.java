@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.ResultActions;
@@ -32,6 +33,9 @@ import com.proyecto.utilities.FileDownloadUtil;
 import com.proyecto.utilities.FileUploadUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import static org.hamcrest.core.Is.is;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
 import static org.mockito.ArgumentMatchers.any;
 // Para seguir el enfoque BDD con Mockito
 import static org.mockito.BDDMockito.given;
@@ -42,14 +46,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.List;
-
 @SpringBootTest
-
 @AutoConfigureMockMvc
-@AutoConfigureTestDatabase(replace = Replace.NONE)
-public class BootcamperControllerTests {
-    
+@AutoConfigureTestDatabase(replace = Replace.NONE)//para que use nuestra base de datos de sql, en vez de una base de datos en memoria
+// replace none para que la use tal cual, no la sustituya
+@WithMockUser(username = "llanos@llanos",
+authorities = {"ADMIN", "USER"}) 
+public class BootcamperControllerTests {   
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -57,7 +63,7 @@ public class BootcamperControllerTests {
     private BootcamperService bootcamperService;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private ObjectMapper objectMapper; //coge objeto de Java que hemos creado y lo convierte a un JSON (serializar)
 
     @MockBean
     private FileUploadUtil fileUploadUtil;
@@ -66,7 +72,8 @@ public class BootcamperControllerTests {
     private FileDownloadUtil fileDownloadUtil;
 
     @Autowired
-    private WebApplicationContext context;
+    private WebApplicationContext context; //Mockito simula las dependencias, por eso hay que explicarle que esto es una aplicación web
+    // así el mockMvc actúa con seguridad listo para hacer las pruevas a los endpoints
 
     @BeforeEach
     public void setUp() {
@@ -87,20 +94,20 @@ public class BootcamperControllerTests {
                 .descripcion(null)
                 .fechaInicio(LocalDate.of(2023, Month.JANUARY, 23))
                 .fechaFin(LocalDate.of(2023, Month.APRIL, 14))
-                .language(Language.INGLES)
+                .language(Bootcamp.Language.INGLES)
                 .build();
 
-                List<Telefono> telefonos;
+                List<Telefono> telefonos = new ArrayList<>();
                 telefonos.add(Telefono.builder()
                 .numero("666000000")
                 .build());
 
-                List<Correo> correos;
+                List<Correo> correos = new ArrayList<>();
                 correos.add(Correo.builder()
                 .email("bootcamper@bootcamp.es")
                 .build());
 
-                List<Idioma> idiomas;
+                List<Idioma> idiomas = new ArrayList<>();
                 idiomas.add(Idioma.builder()
                 .language(Idioma.Language.INGLES)
                 .nivel(Nivel.B2)
@@ -108,24 +115,24 @@ public class BootcamperControllerTests {
                 .build());
 
 
-    Bootcamper bootcamper = Bootcamper.builder()
-    .nombre("bootcamper")
-    .primerApellido("apellido1")
-    .segundoApellido("apellido2")
-    .genero(Genero.MUJER)
-    .DNI("00000000C")
-    .salario(1200.00)
-    .formacion(Formacion.GRADO_UNIVERSITARIO)
-    .fechaNacimiento(LocalDate.of(1990, Month.APRIL, 12))
-    .fechaAlta(LocalDate.of(2023, Month.APRIL, 23))
-    .bootcamp(bootcamp)
-    .telefonos(telefonos)
-    .correos(correos)
-    .idiomas(idiomas)
-    .build();
+        Bootcamper bootcamper = Bootcamper.builder()
+        .nombre("bootcamper")
+        .primerApellido("apellido1")
+        .segundoApellido("apellido2")
+        .genero(Genero.MUJER)
+        .DNI("00000000C")
+        .salario(1200.00)
+        .formacion(Formacion.GRADO_UNIVERSITARIO)
+        .fechaNacimiento(LocalDate.of(1990, Month.APRIL, 12))
+        .fechaAlta(LocalDate.of(2023, Month.APRIL, 23))
+        .bootcamp(bootcamp)
+        .telefonos(telefonos)
+        .correos(correos)
+        .idiomas(idiomas)
+        .build();
 
-    given(bootcamperService.save(any(Bootcamper.class)))
-    .willAnswer(invocation -> invocation.getArgument(0));
+        given(bootcamperService.save(any(Bootcamper.class)))
+        .willAnswer(invocation -> invocation.getArgument(0));
 
 
     // when
@@ -143,4 +150,5 @@ public class BootcamperControllerTests {
                 .andExpect(status().isUnauthorized());
 
     }
+
 }
