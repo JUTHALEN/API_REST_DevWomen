@@ -47,7 +47,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-public class BootcampControllerTest {
+public class BootcampControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
