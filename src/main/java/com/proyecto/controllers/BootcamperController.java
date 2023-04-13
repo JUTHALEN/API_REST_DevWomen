@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.tomcat.util.http.fileupload.FileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.dao.DataAccessException;
@@ -104,7 +103,7 @@ public class BootcamperController {
 
     @PostMapping( consumes = "multipart/form-data")
     @Transactional
-    public ResponseEntity<Map<String, Object>> insert(@Valid @RequestPart(name = "bootcamper") Bootcamper bootcamper,
+    public ResponseEntity<Map<String, Object>> insert(@Valid @RequestPart(name = "bootcamper") Bootcamper bootcamper, 
                                                       BindingResult result,
                                                        @RequestPart(name = "file") MultipartFile file) throws IOException {
 
@@ -122,12 +121,12 @@ public class BootcamperController {
     
             responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.BAD_REQUEST);
             return responseEntity; // si hay error no quiero que se guarde el Bootcamper
+
         }
         if(!file.isEmpty()) {
             String fileCode = fileUploadUtil.saveFile(file.getOriginalFilename(), file); //recibe nombre del archivo y su contenido
             //Hemos lanzado una excepcion para arriba
             bootcamper.setFoto(fileCode + "-" + file.getOriginalFilename());
-
             
             FileUploadResponse fileUploadResponse = FileUploadResponse
             .builder()
@@ -137,7 +136,7 @@ public class BootcamperController {
             .build();
 
             responseAsMap.put("info de la imagen", fileUploadResponse);
-     }
+        }       
         
         Bootcamp bootcampDB = bootcampService.findById(bootcamper.getBootcamp().getId());
            
