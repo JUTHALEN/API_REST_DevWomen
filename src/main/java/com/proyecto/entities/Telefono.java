@@ -1,6 +1,5 @@
 package com.proyecto.entities;
 
-
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -25,7 +24,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+
 public class Telefono implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -37,15 +36,8 @@ public class Telefono implements Serializable {
     @NotEmpty
     private String numero;
 
-
-    /**
-     * Creación de relaciones entre tablas
-     */
-    
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JsonIgnore
     private Bootcamper bootcamper;
-
-
 
 }

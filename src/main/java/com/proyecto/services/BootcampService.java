@@ -10,10 +10,15 @@ import com.proyecto.entities.Bootcamp;
 
 public interface BootcampService {
     public List<Bootcamp> findAll(Sort sort);
-    public Page<Bootcamp> findAll(Pageable pageable); 
-    public Bootcamp findById(long id); 
+
+    public Page<Bootcamp> findAll(Pageable pageable);
+
+    public Bootcamp findById(long id);
+
     public void deleteById(long id);
-    public Bootcamp save (Bootcamp bootcamp); 
+
+    public Bootcamp save(Bootcamp bootcamp);
+
     public void delete(Bootcamp bootcamp);
-   
+
 }

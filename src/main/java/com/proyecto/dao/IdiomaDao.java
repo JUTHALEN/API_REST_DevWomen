@@ -9,9 +9,10 @@ import com.proyecto.entities.Bootcamper;
 import com.proyecto.entities.Idioma;
 
 @Repository
-public interface IdiomaDao extends JpaRepository <Idioma, Long> {
+public interface IdiomaDao extends JpaRepository<Idioma, Long> {
 
-    long deleteByBootcamper (Bootcamper bootcamper);    
-    List <Idioma> findByBootcamper (Bootcamper bootcamper);
-    
+    long deleteByBootcamper(Bootcamper bootcamper);
+
+    List<Idioma> findByBootcamper(Bootcamper bootcamper);
+
 }

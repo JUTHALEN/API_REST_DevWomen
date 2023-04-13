@@ -55,7 +55,7 @@ public class BootcampController {
             try {
                 Pageable pageable = PageRequest.of(page, size, sortByNombre);
                 Page<Bootcamp> bootcampsPaginados = bootcampService.findAll(pageable);
-                bootcamps = bootcampsPaginados.getContent(); // Aqui estan los Bootcamps
+                bootcamps = bootcampsPaginados.getContent();
 
                 responseEntity = new ResponseEntity<List<Bootcamp>>(bootcamps, HttpStatus.OK);
             } catch (Exception e) {
@@ -117,13 +117,12 @@ public class BootcampController {
     @PostMapping
     @Transactional
     public ResponseEntity<Map<String, Object>> insert(@Valid @RequestPart(name = "bootcamp") Bootcamp bootcamp,
-            BindingResult result){
+            BindingResult result) {
 
         Map<String, Object> responseAsMap = new HashMap<>();
 
         ResponseEntity<Map<String, Object>> responseEntity = null;
 
-        /** Primero comprobar si hay errores en el Bootcamp recibido */
         if (result.hasErrors()) {
             List<String> errorMessages = new ArrayList<>();
             for (ObjectError error : result.getAllErrors()) {
@@ -135,7 +134,7 @@ public class BootcampController {
 
             responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.BAD_REQUEST);
 
-            return responseEntity; 
+            return responseEntity;
         }
 
         Bootcamp bootcampDB = bootcampService.save(bootcamp);
@@ -168,12 +167,11 @@ public class BootcampController {
     @Transactional
     public ResponseEntity<Map<String, Object>> update(@Valid @RequestBody Bootcamp bootcamp, BindingResult result,
             @PathVariable(name = "id") Integer id) {
-        // Para que valide lo que llega
 
         Map<String, Object> responseAsMap = new HashMap<>();
 
         ResponseEntity<Map<String, Object>> responseEntity = null;
-        /** Primero comprobar si hay errores en el bootcamp recibido */
+
         if (result.hasErrors()) {
             List<String> errorMessages = new ArrayList<>();
             for (ObjectError error : result.getAllErrors()) {
@@ -185,12 +183,11 @@ public class BootcampController {
 
             responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.BAD_REQUEST);
 
-            return responseEntity; // si hay error no quiero que se guarde el bootcamp
+            return responseEntity;
         }
 
-        // Vinculamos el id que se recibe con el bootcamp
         bootcamp.setId(id);
-        // Si no hay errores, entonces actualizamos el bootcamp.
+
         Bootcamp bootcampDB = bootcampService.save(bootcamp);
         try {
             if (bootcampDB != null) { // Aqui estoy haciendo la validacion de si se ha guardado

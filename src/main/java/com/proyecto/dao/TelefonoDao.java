@@ -1,6 +1,5 @@
 package com.proyecto.dao;
 
-
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,9 +9,10 @@ import com.proyecto.entities.Bootcamper;
 import com.proyecto.entities.Telefono;
 
 @Repository
-public interface TelefonoDao extends JpaRepository <Telefono, Long> {
+public interface TelefonoDao extends JpaRepository<Telefono, Long> {
 
-    long deleteByBootcamper (Bootcamper bootcamper);    
-    List<Telefono> findByBootcamper (Bootcamper bootcamper);
-    
+    long deleteByBootcamper(Bootcamper bootcamper);
+
+    List<Telefono> findByBootcamper(Bootcamper bootcamper);
+
 }
