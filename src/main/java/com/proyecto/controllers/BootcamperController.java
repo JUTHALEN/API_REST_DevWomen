@@ -51,7 +51,7 @@ public class BootcamperController {
 
     @Autowired
     private BootcampService bootcampService;
-    
+
     @Autowired
     private FileUploadUtil fileUploadUtil;
 
@@ -97,50 +97,47 @@ public class BootcamperController {
     }
 
     // Metodo que inserta un nuevo Bootcamp
-    /** Para el metodo post es aconsejable primero ir al metodo get(id) y copiar el body de ese que si tiene bootcamp, si se quiere hacer en el metodo get 
-     * habrá que hacerlo desde el bootcamperDao para el findAll que sea left join b.bootcamp
-     */
 
     @PostMapping(consumes = "multipart/form-data")
     @Transactional
     public ResponseEntity<Map<String, Object>> insert(@Valid @RequestPart(name = "bootcamper") Bootcamper bootcamper,
-                                                      BindingResult result,
-                                                      @RequestPart(name = "file") MultipartFile file) throws IOException {
+            BindingResult result,
+            @RequestPart(name = "file") MultipartFile file) throws IOException {
 
         Map<String, Object> responseAsMap = new HashMap<>();
         ResponseEntity<Map<String, Object>> responseEntity = null;
-    
+
         /** Primero comprobar si hay errores en el Bootcamper recibido */
-        
+
         if (result.hasErrors()) {
             List<String> errorMessages = new ArrayList<>();
             for (ObjectError error : result.getAllErrors()) {
                 errorMessages.add(error.getDefaultMessage());
             }
             responseAsMap.put("errores", errorMessages);
-    
+
             responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.BAD_REQUEST);
             return responseEntity; // si hay error no quiero que se guarde el Bootcamper
         }
-        if(!file.isEmpty()) {
-            String fileCode = fileUploadUtil.saveFile(file.getOriginalFilename(), file); //recibe nombre del archivo y su contenido
-            //Hemos lanzado una excepcion para arriba
+        if (!file.isEmpty()) {
+            String fileCode = fileUploadUtil.saveFile(file.getOriginalFilename(), file); // recibe nombre del archivo y
+                                                                                         // su contenido
+            // Hemos lanzado una excepcion para arriba
             bootcamper.setFoto(fileCode + "-" + file.getOriginalFilename());
 
-            
             FileUploadResponse fileUploadResponse = FileUploadResponse
-            .builder()
-            .fileName(fileCode + "-" + file.getOriginalFilename())
-            .downloadURI("/bootcampers/downloadFile/" + fileCode + "-" + file.getOriginalFilename())
-            .size(file.getSize())
-            .build();
+                    .builder()
+                    .fileName(fileCode + "-" + file.getOriginalFilename())
+                    .downloadURI("/bootcampers/downloadFile/" + fileCode + "-" + file.getOriginalFilename())
+                    .size(file.getSize())
+                    .build();
 
             responseAsMap.put("info de la imagen", fileUploadResponse);
-     }
-        
+        }
+
         Bootcamp bootcampDB = bootcampService.findById(bootcamper.getBootcamp().getId());
-           
-        try{
+
+        try {
             if (bootcampDB == null) {
                 bootcampDB = bootcampService.save(bootcamper.getBootcamp()); // Si no existe me lo guarda
             }
@@ -148,12 +145,14 @@ public class BootcamperController {
             bootcamper.setBootcamp(bootcampDB);
 
             Bootcamper bootcamperDB = bootcamperService.save(bootcamper);
-                /**
-         * Crear la validación para saber si se ha guardado
-         */
-            if(bootcamperDB != null){
-         /*Previamente a guardar un Bootcamp comprobamos si nos han enviado una imagen */
-               
+            /**
+             * Crear la validación para saber si se ha guardado
+             */
+            if (bootcamperDB != null) {
+                /*
+                 * Previamente a guardar un Bootcamp comprobamos si nos han enviado una imagen
+                 */
+
                 String mensaje = "Bootcamper se ha creado correctamente";
                 responseAsMap.put("mensaje", mensaje);
                 responseAsMap.put("Bootcamper", bootcamperDB);
@@ -171,16 +170,6 @@ public class BootcamperController {
         }
         return responseEntity;
     }
-    
-    /**
-     * 
-     * Recupera un bootcamper por el id.
-     * 
-     * Va a responder a una peticion del tipo, por ejemplo:
-     * 
-     * http://localhost:8080/bootcamper/2
-     * 
-     */
 
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> findById(@PathVariable(name = "id") Integer id) {
@@ -193,7 +182,6 @@ public class BootcamperController {
             Bootcamper bootcamper = bootcamperService.findById(id);
 
             if (bootcamper != null) {
-            
 
                 String successMessage = "Se ha encontrado el bootcamper con id: " + id;
                 responseAsMap.put("mensaje", successMessage);
@@ -223,19 +211,13 @@ public class BootcamperController {
     /**
      * Metodo que actualiza los bootcampers
      */
-
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity<Map<String, Object>> update(@Valid @RequestBody Bootcamper bootcamper, BindingResult result,
             @PathVariable(name = "id") Integer id) {
 
-        /**
-         * Generar la validación de lo que se recibe
-         */
-
         Map<String, Object> responseAsMap = new HashMap<>();
         ResponseEntity<Map<String, Object>> responseEntity = null;
-        /** Primero comprobar si hay errores en el bootcamper recibido */
 
         if (result.hasErrors()) {
             List<String> errorMessages = new ArrayList<>();
@@ -248,24 +230,13 @@ public class BootcamperController {
             responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.BAD_REQUEST);
             return responseEntity;
         }
-        /**
-         * Si hay errores no se guardará el bootcamper
-         */
-
-        /**
-         * Vinculamos el id que se recibe con el bootcamper
-         */
 
         bootcamper.setId(id);
-
-        /**
-         * Si no hay errores, entonces actualizamos el bootcamp.
-         */
 
         Bootcamper bootcamperDB = bootcamperService.save(bootcamper);
 
         try {
-            if (bootcamperDB != null) { 
+            if (bootcamperDB != null) {
                 String mensaje = "Bootcamper actualizado correctamente";
                 responseAsMap.put("mensaje", mensaje);
                 responseAsMap.put("bootcamp", bootcamperDB);
@@ -315,9 +286,9 @@ public class BootcamperController {
         return responseEntity;
     }
 
-    /**Metodo para implementar la imagen */
+    /** Metodo para implementar la imagen */
 
-    @GetMapping("/downloadFile/{fileCode}") 
+    @GetMapping("/downloadFile/{fileCode}")
     public ResponseEntity<?> downloadFile(@PathVariable(name = "fileCode") String fileCode) {
 
         Resource resource = null;
@@ -336,10 +307,10 @@ public class BootcamperController {
         String headerValue = "attachment; filename=\"" + resource.getFilename() + "\"";
 
         return ResponseEntity.ok()
-        .contentType(MediaType.parseMediaType(contentType)) 
-        .header(HttpHeaders.CONTENT_DISPOSITION, headerValue)
-        .body(resource);
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, headerValue)
+                .body(resource);
 
-    }  
+    }
 
 }

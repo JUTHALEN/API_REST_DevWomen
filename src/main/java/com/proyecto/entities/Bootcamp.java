@@ -31,15 +31,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class Bootcamp implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    
+
     @NotEmpty(message = "El nombre no puede estar vacío")
     @Size(min = 4, max = 25, message = "El nombre tiene que estar entre 4 y 25 caracteres")
     private String nombre;
@@ -48,31 +48,28 @@ public class Bootcamp implements Serializable {
     private Orientacion orientacion;
     private String descripcion;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")      
-    private LocalDate fechaInicio;  
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate fechaInicio;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")      
-    private LocalDate fechaFin;  
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate fechaFin;
 
     @Enumerated(EnumType.STRING)
     private Language language;
 
     public enum Orientacion {
-        BACK_END,FRONT_END,FULL_STACK
+        BACK_END, FRONT_END, FULL_STACK
     }
-
 
     /**
      * Creación de relaciones entre tablas
      */
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, mappedBy = "bootcamp" ) 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, mappedBy = "bootcamp")
     @JsonIgnore
     private List<Bootcamper> bootcampers;
-    
-    public enum Language{
+
+    public enum Language {
         INGLES, FRANCES, ALEMAN, ITALIANO, CHINO, JAPONES, ARABE, RUSO, PORTUGUES, ESPANOL, OTRO
     }
 
-
 }
-

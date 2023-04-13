@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class Idioma implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -40,19 +40,19 @@ public class Idioma implements Serializable {
 
     @Enumerated(EnumType.STRING)
     private Nivel nivel;
-    
+
     private boolean certificado;
 
-    public enum Language{
+    public enum Language {
         INGLES, FRANCES, ALEMAN, ITALIANO, CHINO, JAPONES, ARABE, RUSO, PORTUGUES, ESPANOL
     }
 
     public enum Nivel {
-        A1, A2, B1, B2, C1,C2
+        A1, A2, B1, B2, C1, C2
     }
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JsonBackReference
     private Bootcamper bootcamper;
-    
+
 }

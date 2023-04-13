@@ -10,7 +10,8 @@ import com.proyecto.entities.Correo;
 
 @Repository
 public interface CorreoDao extends JpaRepository<Correo, Long> {
-    long deleteByBootcamper (Bootcamper bootcamper);    
-    List<Correo> findByBootcamper (Bootcamper bootcamper);
-    
+    long deleteByBootcamper(Bootcamper bootcamper);
+
+    List<Correo> findByBootcamper(Bootcamper bootcamper);
+
 }
