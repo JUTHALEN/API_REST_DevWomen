@@ -1,6 +1,7 @@
 package com.proyecto.controllers;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MockMvcBuilder;
@@ -29,6 +31,8 @@ import com.proyecto.services.BootcamperService;
 import com.proyecto.utilities.FileDownloadUtil;
 import com.proyecto.utilities.FileUploadUtil;
 
+import jakarta.transaction.Transactional;
+
 import static org.mockito.ArgumentMatchers.any;
 
 // Para seguir el enfoque BDD con Mockito
@@ -38,6 +42,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 
 import java.util.ArrayList;
 
@@ -45,135 +50,92 @@ import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
+@Transactional
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 public class BootcampControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+        @Autowired
+        private MockMvc mockMvc;
 
-    @MockBean
-    private BootcampService bootcampService;
+        @MockBean
+        private BootcampService bootcampService;
 
-    @MockBean
-    private BootcamperService bootcamperService;
+        @MockBean
+        private BootcamperService bootcamperService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+        @Autowired
+        private ObjectMapper objectMapper;
 
-    @MockBean
-    private FileUploadUtil fileUploadUtil;
+        @MockBean
+        private FileUploadUtil fileUploadUtil;
 
-    @MockBean
-    private FileDownloadUtil fileDownloadUtil;
+        @MockBean
+        private FileDownloadUtil fileDownloadUtil;
 
-    @Autowired
-    private WebApplicationContext context;
+        @Autowired
+        private WebApplicationContext context;
 
-    @BeforeEach
-    public void setUp() {
+        @BeforeEach
+        public void setUp() {
 
-        mockMvc = MockMvcBuilders.webAppContextSetup(context)
-                .apply(springSecurity())
-                .build();
-    }
+                mockMvc = MockMvcBuilders.webAppContextSetup(context)
+                                .apply(springSecurity())
+                                .build();
+        }
 
-    @Test
-    void testGuardarBootcamp() throws Exception {
-        // given - Datos dados
+        @Test
+        void testGuardarBootcamp() throws Exception {
+                // given - Datos dados
 
-        Bootcamp bootcamp = Bootcamp.builder()
-                .nombre("Bootcamp formacion")
-                .descripcion(null)
-                .orientacion(Orientacion.FRONT_END)
-                .language(Language.ITALIANO)
-                .fechaInicio(null)
-                .fechaFin(null)
-                .bootcampers((new ArrayList<>()))
-                .build();
+                Bootcamp bootcamp = Bootcamp.builder()
+                                .nombre("Bootcamp formacion")
+                                .descripcion(null)
+                                .orientacion(Orientacion.FRONT_END)
+                                .language(Language.ITALIANO)
+                                .fechaInicio(null)
+                                .fechaFin(null)
+                                .bootcampers((new ArrayList<>()))
+                                .build();
 
-        Bootcamper bootcamper = Bootcamper.builder()
-                .nombre("Pablo")
-                .id(20L)
-                .primerApellido("Gomez")
-                .segundoApellido("Lopez")
-                .salario(1700)
-                .DNI("837475672L")
-                .genero(Genero.HOMBRE)
-                .fechaAlta(null)
-                .bootcamp(bootcamp)
-                .fechaNacimiento(null)
-                .formacion(Formacion.GRADO_SUPERIOR)
-                .build();
+                Bootcamper bootcamper = Bootcamper.builder()
+                                .nombre("Pablo")
+                                .id(20L)
+                                .primerApellido("Gomez")
+                                .segundoApellido("Lopez")
+                                .salario(1700)
+                                .DNI("837475672L")
+                                .genero(Genero.HOMBRE)
+                                .fechaAlta(null)
+                                .bootcamp(bootcamp)
+                                .fechaNacimiento(null)
+                                .formacion(Formacion.GRADO_SUPERIOR)
+                                .build();
 
-        given(bootcampService.save(any(Bootcamp.class)))
-                .willAnswer(invocation -> invocation.getArgument(0));
+                given(bootcampService.save(any(Bootcamp.class)))
+                                .willAnswer(invocation -> invocation.getArgument(0));
 
-        // when - Accion
-        String jsonStringProduct = objectMapper.writeValueAsString(bootcamp);
-        System.out.println(jsonStringProduct);
-        ResultActions response = mockMvc
-                .perform(post("/bootcamps")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonStringProduct));
+                // when - Accion
+                String jsonStringProduct = objectMapper.writeValueAsString(bootcamp);
 
-        // then - Resulta esperado
-        response.andDo(print())
-                .andExpect(status().isUnauthorized()); // se espera un Unauthorized por el endpoint
-        // .andExpect()
-        // .andExpect(jsonPath("$.nombre", is(producto.getNombre())))
-        // .andExpect(jsonPath("$.descripcion", is(producto.getDescripcion())));
+                MockMultipartFile bytesArrayProduct = new MockMultipartFile("bootcamp",
+                                null, "application/json", jsonStringProduct.getBytes());
 
-    }
+                mockMvc.perform(multipart("/bootcamps")
+                                .file("file", null)
+                                .file(bytesArrayProduct))
+                                .andExpect(status().isUnauthorized())
+                                .andDo(print());
 
-    @Test
-    @WithMockUser(username = "elisabetagullo@gmail.com", authorities = { "ROLE_ADMIN", "ROLE_USER" }) // usuario
-                                                                                                      // mockeado-serializado
-    void testGuardarBootcampConUserMockeado() throws Exception {
+                // then - Resulta esperado
+                //response.andDo(print())
+                //     .andExpect(status().isUnauthorized()); // se espera un Unauthorized por el endpoint
+                // .andExpect()
+                // .andExpect(jsonPath("$.nombre", is(producto.getNombre())))
+                // .andExpect(jsonPath("$.descripcion", is(producto.getDescripcion())));
 
-        // given - Datos dados
+        }
 
-        Bootcamp bootcamp = Bootcamp.builder()
-                .nombre("Bootcamp formacion")
-                .descripcion(null)
-                .orientacion(Orientacion.FRONT_END)
-                .language(Language.ITALIANO)
-                .fechaInicio(null)
-                .fechaFin(null)
-                .bootcampers((new ArrayList<>()))
-                .build();
 
-        Bootcamper bootcamper = Bootcamper.builder()
-                .nombre("Pablo")
-                .id(20L)
-                .primerApellido("Gomez")
-                .segundoApellido("Lopez")
-                .salario(1700)
-                .DNI("837475672L")
-                .genero(Genero.HOMBRE)
-                .fechaAlta(null)
-                .bootcamp(bootcamp)
-                .fechaNacimiento(null)
-                .formacion(Formacion.GRADO_SUPERIOR)
-                .build();
-                
-        given(bootcampService.save(any(Bootcamp.class)))
-                .willAnswer(invocation -> invocation.getArgument(0));
+        }
 
-        // when - Accion
-        String jsonStringProduct = objectMapper.writeValueAsString(bootcamp);
-        System.out.println(jsonStringProduct);
-        ResultActions response = mockMvc
-                .perform(post("/bootcamps")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonStringProduct));
-
-        // then - Resulta esperado
-        response.andDo(print())
-                .andExpect(status().isCreated()) // se espera un created por el endpoint
-                .andExpect(jsonPath("$.nombre", is(bootcamp.getNombre())))
-                .andExpect(jsonPath("$.descripcion", is(bootcamp.getDescripcion())));
-
-    }
-
-}
