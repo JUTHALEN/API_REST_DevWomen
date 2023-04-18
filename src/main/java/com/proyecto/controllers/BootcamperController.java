@@ -117,12 +117,10 @@ public class BootcamperController {
             responseAsMap.put("errores", errorMessages);
 
             responseEntity = new ResponseEntity<Map<String, Object>>(responseAsMap, HttpStatus.BAD_REQUEST);
-            return responseEntity; // si hay error no quiero que se guarde el Bootcamper
+            return responseEntity;
         }
         if (!file.isEmpty()) {
-            String fileCode = fileUploadUtil.saveFile(file.getOriginalFilename(), file); // recibe nombre del archivo y
-                                                                                         // su contenido
-            // Hemos lanzado una excepcion para arriba
+            String fileCode = fileUploadUtil.saveFile(file.getOriginalFilename(), file); 
             bootcamper.setFoto(fileCode + "-" + file.getOriginalFilename());
 
             FileUploadResponse fileUploadResponse = FileUploadResponse
